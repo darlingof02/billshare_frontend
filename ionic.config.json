@@ -1,0 +1,7 @@
+{
+  "name": "billshare_frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

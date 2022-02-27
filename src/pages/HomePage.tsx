@@ -21,7 +21,6 @@ const HomePage: React.FC = () => {
     ]
     const [items, setItems] = useState<string[]>(example1)
     const [selected, setSelected] = useState<string>('bill')
-    
     const showBill = () => {
         // request bills
         setSelected("bill")
@@ -67,6 +66,7 @@ const HomePage: React.FC = () => {
                 </IonList>
             </IonContent>
 
+ 
         </IonPage>
     )
 }

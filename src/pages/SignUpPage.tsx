@@ -1,10 +1,8 @@
-import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToast, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import Authentication from '../api/Authentication';
 import { useHistory } from "react-router-dom";
 
-import { API_URL } from '../api/constant';
-import { cpuUsage } from 'process';
 
 const SignUpPage: React.FC = () => {
     
@@ -19,6 +17,8 @@ const SignUpPage: React.FC = () => {
     })
     const [isIncorrect, setIncorrect] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
+    // const [present, dismiss] = useIonToast();
+
     const info = userInfo;
 
     const signup = (userInfo:Object) => {
@@ -27,8 +27,9 @@ const SignUpPage: React.FC = () => {
             if(response.status == 200)
                 history.push('/login')
             else{
-                setIncorrect(true)
                 setErrorMessage(response.data)
+                setIncorrect(true)
+                // present(response.data, 2000)
             }
         })
         .catch((error)=>{
@@ -46,7 +47,7 @@ const SignUpPage: React.FC = () => {
         </IonHeader>
         <IonContent className='ion-content'>
 
-                {isIncorrect && <IonItem lines="none" color='danger'><IonLabel class='ion-text-center'>{errorMessage}</IonLabel></IonItem>}
+                {/* {isIncorrect && <IonItem lines="none" color='danger'><IonLabel class='ion-text-center'>{errorMessage}</IonLabel></IonItem>} */}
                 <IonList>
                     <IonItem>
                         <IonLabel position='stacked'>nick name: </IonLabel>
@@ -91,7 +92,16 @@ const SignUpPage: React.FC = () => {
                 <IonButton expand='block' type='submit' onClick={() => {console.log(userInfo);signup(userInfo)}}>Sign Up</IonButton>
                 <IonButton expand='block' color='danger' onClick={() => {history.goBack()}}>Cancel</IonButton>
 
+                <IonToast
+                    isOpen={isIncorrect}
+                    onDidDismiss={() => setIncorrect(false)}
+                    message= {errorMessage}
+                    duration={2000}
+                    position='top'
+                    color='danger'
+                />
         </IonContent>
+
     </IonPage>
     
   );

@@ -25,7 +25,10 @@ const LoginPage: React.FC = () => {
             history.push('/home')
         })
         .catch(
-            (error) => setIncorrect(true)
+            (error) => {
+            setIncorrect(true);
+            setTimeout(()=>{setIncorrect(false)},2000)
+        }
         )
     }
 
@@ -38,6 +41,7 @@ const LoginPage: React.FC = () => {
             </IonHeader>
             <IonContent className='ion-content'>
                     {isIncorrect && <IonItem lines="none" color='danger'><IonLabel class='ion-text-center'>Incorrect username or password</IonLabel></IonItem>}
+                    {/* {!isIncorrect && <IonItem lines="none" color='white'><IonLabel class='ion-text-center'></IonLabel></IonItem>} */}
 
                     <IonList>
                         <IonItem>

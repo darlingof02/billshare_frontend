@@ -5,8 +5,14 @@ import { API_URL } from './constant'
 
 class Authentication {
 
-    register(props) {
-        
+    register(userInfo) {
+        console.log("fuck")
+        console.log(userInfo)
+        return axios({
+            url: API_URL + '/create_user',
+            method: 'post',
+            data: userInfo
+        })
     }
 
     executeJWTAuthService(email, password) {

@@ -3,10 +3,8 @@ import React, { useState } from 'react'
 import './LoginPage.css'
 import Authentication from '../api/Authentication';
 import { useLocalStorage } from '../api/MyHooks';
-import axios from 'axios';
 import { useHistory } from "react-router-dom";
 
-// import { useNavigate } from "react-router-dom";
 
 
 const LoginPage: React.FC = () => {

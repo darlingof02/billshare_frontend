@@ -18,7 +18,7 @@ const SignUpPage: React.FC = () => {
         'tel': 0,
     })
     const [isIncorrect, setIncorrect] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('false')
+    const [errorMessage, setErrorMessage] = useState('')
     const info = userInfo;
 
     const signup = (userInfo:Object) => {
@@ -89,6 +89,8 @@ const SignUpPage: React.FC = () => {
 
                 </IonList>
                 <IonButton expand='block' type='submit' onClick={() => {console.log(userInfo);signup(userInfo)}}>Sign Up</IonButton>
+                <IonButton expand='block' color='danger' onClick={() => {history.goBack()}}>Cancel</IonButton>
+
         </IonContent>
     </IonPage>
     

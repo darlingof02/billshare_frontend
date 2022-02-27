@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isIncorrect, setIncorrect] = useState(false)
     // const naviagte = useNavigate();
     let [localEmail, setLocalEmail] = useLocalStorage('localEmail', '')
     let history = useHistory();
@@ -23,7 +24,9 @@ const LoginPage: React.FC = () => {
             Authentication.setupAxiosIntercetors('Bearer ' + response.data.token)
             history.push('/home')
         })
-        .catch((error) => console.log(error))
+        .catch(
+            (error) => setIncorrect(true)
+        )
     }
 
     return (
@@ -34,6 +37,8 @@ const LoginPage: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className='ion-content'>
+                    {isIncorrect && <IonItem lines="none" color='danger'><IonLabel class='ion-text-center'>Incorrect username or password</IonLabel></IonItem>}
+
                     <IonList>
                         <IonItem>
                             <IonLabel position='floating'>Email</IonLabel>

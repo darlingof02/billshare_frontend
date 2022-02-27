@@ -18,7 +18,7 @@ const SignUpPage: React.FC = () => {
         'tel': 0,
     })
     const [isIncorrect, setIncorrect] = useState(false)
-
+    const [errorMessage, setErrorMessage] = useState('false')
     const info = userInfo;
 
     const signup = (userInfo:Object) => {
@@ -28,6 +28,7 @@ const SignUpPage: React.FC = () => {
                 history.push('/login')
             else{
                 setIncorrect(true)
+                setErrorMessage(response.data)
             }
         })
         .catch((error)=>{
@@ -45,7 +46,7 @@ const SignUpPage: React.FC = () => {
         </IonHeader>
         <IonContent className='ion-content'>
 
-                {isIncorrect && <IonItem lines="none" color='danger'><IonLabel class='ion-text-center'>Email has been registered</IonLabel></IonItem>}
+                {isIncorrect && <IonItem lines="none" color='danger'><IonLabel class='ion-text-center'>{errorMessage}</IonLabel></IonItem>}
                 <IonList>
                     <IonItem>
                         <IonLabel position='stacked'>nick name: </IonLabel>

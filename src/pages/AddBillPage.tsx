@@ -162,16 +162,17 @@ const AddBillPage: React.FC = () => {
             <IonContent>
             <IonItem>
                 <IonLabel slot="" position="floating">Total Amount</IonLabel>
-                <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value));}}></IonInput>
+                <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value))}}></IonInput>
                 
             </IonItem>
 
             <IonItem>
-                <IonSegment value={splitMode} onIonChange={e => {setSplitMode(String(e.detail.value))}}>
-                    <IonSegmentButton value="include" onChange = {e=>console.log("press include")}>
+                <IonSegment value={splitMode} onIonChange={e => {console.log('change');setSplitMode(String(e.detail.value))}}
+                 onClick={e=>splitAmount(total)}>
+                    <IonSegmentButton value="include" >
                         <IonLabel>include me</IonLabel>
                     </IonSegmentButton>
-                    <IonSegmentButton value="exclude" onChange = {e=>console.log("press exclude")}>
+                    <IonSegmentButton value="exclude" >
                         <IonLabel>exclude me</IonLabel>
                     </IonSegmentButton>
                 </IonSegment>

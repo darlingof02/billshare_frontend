@@ -1,5 +1,5 @@
-import { InputChangeEventDetail, IonButton, IonButtons, IonChip, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToggle, IonToolbar } from "@ionic/react";
-import {search,menu, ellipsisHorizontal, ellipsisVertical, play, removeCircle, closeCircle } from 'ionicons/icons';
+import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle } from 'ionicons/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 
@@ -26,12 +26,8 @@ const AddBillPage: React.FC = () => {
     const [splitMode, setSplitMode] = useState("include")
     const [payerList, setPayerList] = useState<Payer[]>(simulate)
 
-    const calcAmount = (deduction:Number) => {
-        
-
-    }
     const splitAmount = (totalNum:number) => {
-        console.log("splitMode in splictAmount",splitMode)
+        // console.log("splitMode in splictAmount",splitMode)
         let payerNum = 1;
         if(splitMode == 'exclude')
             payerNum = 0
@@ -137,6 +133,21 @@ const AddBillPage: React.FC = () => {
                 break;
             }
         }
+        let payerNum = 1;
+        if(splitMode == 'exclude')
+            payerNum = 0
+        let totalNum = total
+        payerList_.forEach((payer:Payer,idx,payerList_) =>{
+            if(!payer.autoCalc)
+                totalNum -= payer.amount;
+            else 
+                payerNum++;
+        })
+        payerList_.forEach((payer:Payer,idx,payerList_) =>{
+            if(payer.autoCalc)
+                payer.amount = Number((totalNum/payerNum).toFixed(2))
+        })
+
         setPayerList(payerList_)
     }
 
@@ -160,14 +171,14 @@ const AddBillPage: React.FC = () => {
                 <IonTitle>New Bill</IonTitle>
             </IonToolbar>
             <IonContent>
-            <IonItem>
+            <IonItem lines="inset">
                 <IonLabel slot="" position="floating">Total Amount</IonLabel>
                 <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value))}}></IonInput>
                 
             </IonItem>
 
-            <IonItem>
-                <IonSegment value={splitMode} onIonChange={e => {console.log('change');setSplitMode(String(e.detail.value))}}
+            <IonItem lines="inset">
+                <IonSegment value={splitMode} onIonChange={e => {setSplitMode(String(e.detail.value))}}
                  onClick={e=>splitAmount(total)}>
                     <IonSegmentButton value="include" >
                         <IonLabel>include me</IonLabel>
@@ -189,10 +200,6 @@ const AddBillPage: React.FC = () => {
                         onClick={(e) => (e)}>
                         manually
                     </IonButton>
-
-                    {/* <IonLabel slot="end">Checked</IonLabel> */}
-                    {/* <IonToggle slot="end" checked={true} onIonChange={e => (1)} /> */}
-
                     <IonIcon payer-email={payer.email} color="danger" slot="end" ios={removeCircle} 
                     onClick = {(event) =>{del(event)}}/>
                 </IonItem>
@@ -202,7 +209,7 @@ const AddBillPage: React.FC = () => {
             
 
 
-            <IonButton onClick={()=>{console.log("add new payer")}}>
+            <IonButton fill="outline" size="small" onClick={()=>{console.log("add new payer");setPayerList(simulate);splitAmount(total)}}>
                 Add Payer
             </IonButton>
 
@@ -214,18 +221,7 @@ const AddBillPage: React.FC = () => {
                 Cancel
             </IonButton>
             </IonContent>
-            <IonSegment onIonChange={e => console.log('Segment selected', e.detail.value)}>
-          <IonSegmentButton value="friends">
-            <IonLabel>Friends</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="enemies">
-            <IonLabel>Enemies</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
 
-
-
- 
         </IonPage>
     )
 }

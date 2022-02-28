@@ -1,15 +1,16 @@
-import { InputChangeEventDetail, IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
-import {search,menu, ellipsisHorizontal, ellipsisVertical, play, removeCircle } from 'ionicons/icons';
+import { InputChangeEventDetail, IonButton, IonButtons, IonChip, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import {search,menu, ellipsisHorizontal, ellipsisVertical, play, removeCircle, closeCircle } from 'ionicons/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 
+
+// TODO: 将idx改成payer在list中的idx，就不用遍历列表了
 
 interface Payer {
     email: string;
     amount: number;
     autoCalc: boolean
 }
-
 
 const AddBillPage: React.FC = () => {
     const history = useHistory()
@@ -22,20 +23,111 @@ const AddBillPage: React.FC = () => {
     ]
 
     const [total, setTotal] = useState(0)
-    const [mode, setMode] = useState("include")
+    const [splitMode, setSplitMode] = useState("include")
     const [payerList, setPayerList] = useState<Payer[]>(simulate)
 
     const calcAmount = (deduction:Number) => {
-
+        
 
     }
+    const splitAmount = (totalNum:number) => {
+        let payerNum = 0;
+        if(splitMode == 'include')
+            payerNum = 1
+        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+        
+        Object.assign(payerList_,payerList)
+        payerList_.forEach((payer:Payer,idx,payerList_) =>{
+            if(!payer.autoCalc)
+                totalNum -= payer.amount;
+            else 
+                payerNum++;
+        })
+        payerList_.forEach((payer:Payer,idx,payerList_) =>{
+            if(payer.autoCalc)
+                payer.amount = Number((totalNum/payerNum).toFixed(2))
+        })
+        setTotal(totalNum)
+        setPayerList(payerList_)
+    }
+
+    // const handleBlur = (e:React.FocusEvent<HTMLIonInputElement, Element>) => {
+        
+    //     const email = e.currentTarget.getAttribute("payer-email");
+    //     let totalNum = total
+
+    //     const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+    //     Object.assign(payerList_,payerList)
+    //     for(let i =0;i<payerList_.length;i++ ) {
+    //         if(payerList_[i].email==email){
+    //             payerList_[i].autoCalc = false;
+    //             payerList_[i].amount = e.target.value;
+    //             console.log(email)
+    //             console.log(payerList_[i])
+
+    //             break;
+    //         }
+    //     }
+    //     let payerNum = 0;
+    //     if(splitMode == 'include')
+    //         payerNum = 1
+    //     payerList_.forEach((payer:Payer,idx,payerList_) =>{
+    //         if(!payer.autoCalc)
+    //             totalNum -= payer.amount;
+    //         else 
+    //             payerNum++;
+    //     })
+    //     payerList_.forEach((payer:Payer,idx,payerList_) =>{
+    //         if(payer.autoCalc)
+    //             payer.amount = Number((totalNum/payerNum).toFixed(2))
+    //     })
+    //     setPayerList(payerList_)
+
+    // }
     
+    // const handleEditManually = (e:any) => {
+    //     const email = e.target.getAttribute("payer-email");
+    //     console.log(e.target)
+    //     if(e.target.getAttribute("fill") == "outline"){
+    //         e.target.setAttribute("fill","solid")
+    //         console.log("wuhu")
+    //     }
+            
+    //     else
+    //         e.target.getAttribute("fill","outline")
+    //     const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+    //     Object.assign(payerList_,payerList)
+    //     for(let i =0;i<payerList_.length;i++ ) {
+    //         if(payerList_[i].email==email){
+    //             payerList_[i].autoCalc = false;
+    //             payerList_[i].amount = Number(e.target.value);
+    //             // console.log(email)
+    //             // console.log(payerList_[i])
+    //             break;
+    //         }
+    //     }
+    //     setPayerList(payerList_)
+    // }
+    // const handleChange = (e:any) => {
+    //     const email = e.target.getAttribute("payer-email");
+    //     const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+    //     Object.assign(payerList_,payerList)
+    //     for(let i =0;i<payerList_.length;i++ ) {
+    //         if(payerList_[i].email==email){
+    //             payerList_[i].autoCalc = false;
+    //             payerList_[i].amount = e.target.value;
+    //             // console.log(email)
+    //             // console.log(payerList_[i])
+    //             break;
+    //         }
+    //     }
+    //     setPayerList(payerList_)
+    // }
+
+
     const del = (e:any) => {
-        const index = e.target.getAttribute("data-index");
+        const index = e.target.getAttribute("payer-email");
         console.log(index)
-        const element = document.getElementById(index)
-        console.log(element)
-        // element?.parentNode?.removeChild(element);
         const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
         Object.assign(payerList_,payerList)
         for(let i =0;i<payerList_.length;i++ ) {
@@ -50,7 +142,6 @@ const AddBillPage: React.FC = () => {
 
     return (
         <IonPage>
-
             <IonToolbar>
                 <IonButtons slot="secondary">
                     <IonButton >
@@ -69,12 +160,13 @@ const AddBillPage: React.FC = () => {
             </IonToolbar>
             <IonContent>
             <IonItem>
-                <IonLabel>Total Amount</IonLabel>
-                <IonInput type='tel' onIonChange={(event) => {console.log(payerList);setTotal(Number(event.detail.value))}}></IonInput>
+                <IonLabel slot="" position="floating">Total Amount</IonLabel>
+                <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value))}}></IonInput>
+                
             </IonItem>
 
             <IonItem>
-                <IonSegment value={mode} onIonChange={e => setMode(String(e.detail.value))}>
+                <IonSegment value={splitMode} onIonChange={e => setSplitMode(String(e.detail.value))}>
                     <IonSegmentButton value="include">
                         <IonLabel>include me</IonLabel>
                     </IonSegmentButton>
@@ -89,14 +181,19 @@ const AddBillPage: React.FC = () => {
             {payerList.map((payer) => 
                 <IonItem key={payer.email} id={payer.email}>
                     <IonLabel >{payer.email}</IonLabel>
-                    <IonInput type='tel' inputmode="numeric" slot="end" clearOnEdit={true}></IonInput>
-                    <IonIcon data-index={payer.email} color="danger" slot="end" ios={removeCircle} 
+                    <IonInput payer-email={payer.email} type='tel' value={String(payer.amount)} slot="end" clearOnEdit={true} 
+                    onIonChange={(e)=>(e)}></IonInput>
+                    <IonButton payer-email={payer.email} slot="end" fill="outline" 
+                        onClick={(e) => (e)}>
+                        manually
+                    </IonButton>
+                    <IonIcon payer-email={payer.email} color="danger" slot="end" ios={removeCircle} 
                     onClick = {(event) =>{del(event)}}/>
                 </IonItem>
                 
             )}
             </IonList>
-
+            
 
 
             <IonButton onClick={()=>{console.log("add new payer")}}>

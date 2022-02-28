@@ -22,23 +22,29 @@ const AddBillPage: React.FC = () => {
     ]
 
     const [total, setTotal] = useState(0)
+    const [mode, setMode] = useState("include")
     const [payerList, setPayerList] = useState<Payer[]>(simulate)
 
     const calcAmount = (deduction:Number) => {
+
 
     }
     
     const del = (e:any) => {
         const index = e.target.getAttribute("data-index");
+        console.log(index)
         const element = document.getElementById(index)
-        element?.remove()
-        for(let i =0;i<payerList.length;i++ ) {
-            if(payerList[i].email==index){
-                payerList.splice(i,1);
+        console.log(element)
+        // element?.parentNode?.removeChild(element);
+        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+        Object.assign(payerList_,payerList)
+        for(let i =0;i<payerList_.length;i++ ) {
+            if(payerList_[i].email==index){
+                payerList_.splice(i,1);
                 break;
             }
         }
-        
+        setPayerList(payerList_)
     }
 
 
@@ -63,12 +69,21 @@ const AddBillPage: React.FC = () => {
             </IonToolbar>
             <IonContent>
             <IonItem>
-                <IonLabel position='floating'>Total Amount</IonLabel>
-                <IonInput  type='tel' onIonChange={(event) => {setTotal(Number(event.detail.value));}}></IonInput>
-                <IonButton slot="end">
-                        <IonIcon  slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
-                </IonButton>
+                <IonLabel>Total Amount</IonLabel>
+                <IonInput type='tel' onIonChange={(event) => {console.log(payerList);setTotal(Number(event.detail.value))}}></IonInput>
             </IonItem>
+
+            <IonItem>
+                <IonSegment value={mode} onIonChange={e => setMode(String(e.detail.value))}>
+                    <IonSegmentButton value="include">
+                        <IonLabel>include me</IonLabel>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="exclude">
+                        <IonLabel>exclude me</IonLabel>
+                    </IonSegmentButton>
+                </IonSegment>
+            </IonItem>
+
 
             <IonList >
             {payerList.map((payer) => 

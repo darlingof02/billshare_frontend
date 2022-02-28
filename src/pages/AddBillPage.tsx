@@ -1,4 +1,4 @@
-import { InputChangeEventDetail, IonButton, IonButtons, IonChip, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { InputChangeEventDetail, IonButton, IonButtons, IonChip, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToggle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, play, removeCircle, closeCircle } from 'ionicons/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router";
@@ -31,9 +31,10 @@ const AddBillPage: React.FC = () => {
 
     }
     const splitAmount = (totalNum:number) => {
-        let payerNum = 0;
-        if(splitMode == 'include')
-            payerNum = 1
+        console.log("splitMode in splictAmount",splitMode)
+        let payerNum = 1;
+        if(splitMode == 'exclude')
+            payerNum = 0
         const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
         
         Object.assign(payerList_,payerList)
@@ -161,16 +162,16 @@ const AddBillPage: React.FC = () => {
             <IonContent>
             <IonItem>
                 <IonLabel slot="" position="floating">Total Amount</IonLabel>
-                <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value))}}></IonInput>
+                <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value));}}></IonInput>
                 
             </IonItem>
 
             <IonItem>
-                <IonSegment value={splitMode} onIonChange={e => setSplitMode(String(e.detail.value))}>
-                    <IonSegmentButton value="include">
+                <IonSegment value={splitMode} onIonChange={e => {setSplitMode(String(e.detail.value))}}>
+                    <IonSegmentButton value="include" onChange = {e=>console.log("press include")}>
                         <IonLabel>include me</IonLabel>
                     </IonSegmentButton>
-                    <IonSegmentButton value="exclude">
+                    <IonSegmentButton value="exclude" onChange = {e=>console.log("press exclude")}>
                         <IonLabel>exclude me</IonLabel>
                     </IonSegmentButton>
                 </IonSegment>
@@ -181,12 +182,16 @@ const AddBillPage: React.FC = () => {
             {payerList.map((payer) => 
                 <IonItem key={payer.email} id={payer.email}>
                     <IonLabel >{payer.email}</IonLabel>
-                    <IonInput payer-email={payer.email} type='tel' value={String(payer.amount)} slot="end" clearOnEdit={true} 
+                    <IonInput  payer-email={payer.email} type='tel' value={String(payer.amount)} slot="end" clearOnEdit={true} 
                     onIonChange={(e)=>(e)}></IonInput>
                     <IonButton payer-email={payer.email} slot="end" fill="outline" 
                         onClick={(e) => (e)}>
                         manually
                     </IonButton>
+
+                    {/* <IonLabel slot="end">Checked</IonLabel> */}
+                    {/* <IonToggle slot="end" checked={true} onIonChange={e => (1)} /> */}
+
                     <IonIcon payer-email={payer.email} color="danger" slot="end" ios={removeCircle} 
                     onClick = {(event) =>{del(event)}}/>
                 </IonItem>
@@ -208,6 +213,14 @@ const AddBillPage: React.FC = () => {
                 Cancel
             </IonButton>
             </IonContent>
+            <IonSegment onIonChange={e => console.log('Segment selected', e.detail.value)}>
+          <IonSegmentButton value="friends">
+            <IonLabel>Friends</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value="enemies">
+            <IonLabel>Enemies</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
 
 
 

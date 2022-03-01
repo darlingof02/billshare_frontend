@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonCheckbox, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle } from 'ionicons/icons';
 import React, { useState } from "react";
 import { useHistory } from "react-router";
@@ -25,10 +25,12 @@ const AddBillPage: React.FC = () => {
     const [total, setTotal] = useState(0)
     const [splitMode, setSplitMode] = useState("include")
     const [disabled, setDisabled] = useState(true)
+    const [fill, setFill] = useState("outlined")
     const [payerList, setPayerList] = useState<Payer[]>(simulate)
 
     const splitAmount = (totalNum:number) => {
         // console.log("splitMode in splictAmount",splitMode)
+        let totalNum_ = totalNum
         let payerNum = 1;
         if(splitMode === 'exclude')
             payerNum = 0
@@ -43,8 +45,9 @@ const AddBillPage: React.FC = () => {
         })
         payerList_.forEach((payer:Payer,idx,payerList_) =>{
             if(payer.autoCalc)
-                payer.amount = Number((totalNum/payerNum).toFixed(2))
+                payer.amount = Math.max(Number((totalNum/payerNum).toFixed(2)),0)
         })
+        
         setTotal(totalNum)
         if(payerList_.length!==0 && totalNum!==0)
             setDisabled(false)
@@ -126,6 +129,40 @@ const AddBillPage: React.FC = () => {
     //     setPayerList(payerList_)
     // }
 
+    const handleManuallyButton = (e:any) => {
+        // console.log(e.target.getAttribute("fill"))
+
+        const email = e.target.getAttribute("payer-email");
+        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+        Object.assign(payerList_,payerList)
+        for(let i =0;i<payerList_.length;i++ ) {
+            if(payerList_[i].email===email){
+                if(e.target.getAttribute("fill") === "outline")
+                    payerList_[i].autoCalc = false;
+                else
+                    payerList_[i].autoCalc = true;
+                break;
+            }
+        }
+        setPayerList(payerList_)
+    }
+    const handlePayerInputChange = (e:any) => {
+        // console.log(e.target.getAttribute("fill"))
+        console.log(e.target.value)
+        const email = e.target.getAttribute("payer-email");
+        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
+        Object.assign(payerList_,payerList)
+        for(let i =0;i<payerList_.length;i++ ) {
+            if(payerList_[i].email===email){
+                payerList_[i].amount = Number(e.target.value)
+            }
+        }
+        console.log(payerList)
+        setPayerList(payerList_)
+    }
+
+    
+
 
     const del = (e:any) => {
         const index = e.target.getAttribute("payer-email");
@@ -159,7 +196,6 @@ const AddBillPage: React.FC = () => {
         setPayerList(payerList_)
 
     }
-
 
     return (
         <IonPage>
@@ -204,9 +240,9 @@ const AddBillPage: React.FC = () => {
                 <IonItem key={payer.email} id={payer.email}>
                     <IonLabel >{payer.email}</IonLabel>
                     <IonInput  payer-email={payer.email} type='tel' value={String(payer.amount)} slot="end" clearOnEdit={true} 
-                    onIonChange={(e)=>(e)}></IonInput>
-                    <IonButton payer-email={payer.email} slot="end" fill="outline" 
-                        onClick={(e) => (e)}>
+                        onIonChange={(e)=>{handlePayerInputChange(e)}}></IonInput>
+                    <IonButton payer-email={payer.email} slot="end" fill={payer.autoCalc?"outline":"solid"} 
+                        onClick={(e) => handleManuallyButton(e)}>
                         manually
                     </IonButton>
                     <IonIcon payer-email={payer.email} color="danger" slot="end" ios={removeCircle} 
@@ -215,12 +251,12 @@ const AddBillPage: React.FC = () => {
                 
             )}
             </IonList>
-            
+            <IonItem lines="none">
+                <IonButton fill="outline" size="small" onClick={()=>{console.log("add new payer");setPayerList(simulate);splitAmount(total)}}>
+                    Add Payer
+                </IonButton>
+            </IonItem>
 
-
-            <IonButton fill="outline" size="small" onClick={()=>{console.log("add new payer");setPayerList(simulate);splitAmount(total)}}>
-                Add Payer
-            </IonButton>
 
             <IonButton expand="block" disabled={disabled} onClick={()=>{console.log("add new payer")}}>
                 Create Bill

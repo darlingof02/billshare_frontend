@@ -1,6 +1,6 @@
 import { IonButton, IonButtons, IonCheckbox, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
-import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle } from 'ionicons/icons';
+import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
 import React, { CSSProperties, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL, CHECK_USER} from "../api/constant";
@@ -38,6 +38,7 @@ const CreateBillPage: React.FC = () => {
     const [disabled, setDisabled] = useState(true)
     const [userExists, setUserExists] = useState(false)
     const [addFailed, setAddFailed] = useState(false)
+    const [due, setDue] = useState<Date|null>(null)
 
 
     const splitAmountMap = (totalNum:number) => {
@@ -65,7 +66,6 @@ const CreateBillPage: React.FC = () => {
 
         setPayerMap(payerMap_)  
     }
-
     const handleManuallyButtonMap = (e:any) => {
         // console.log(e.target.getAttribute("fill"))
 
@@ -74,7 +74,6 @@ const CreateBillPage: React.FC = () => {
         e.target.getAttribute("fill") === "outline"? payerMap_.get(email)!.autoCalc=false: payerMap_.get(email)!.autoCalc=true
         setPayerMap(payerMap_)
     }
-
     const handlePayerInputChangeMap = (e:any) => {
         // console.log(e.target.getAttribute("fill"))
         console.log(e.target.value)
@@ -106,8 +105,28 @@ const CreateBillPage: React.FC = () => {
 
     }
 
+    function setDueOnClick() {
+        present({
+            header: 'Set Due date',
+            // message: 'set due date',
+            inputs: [
+              {
+                  name: 'due',
+                  type: 'date',
+                  handler: (e) => console.log("input", e)
+              }
+            ],
+            buttons: [
+              'Cancel',
+              { text: 'Add', handler: (d) => { 
+                  setDue(d.due)
+              }},
+            ],
+            onDidDismiss: (e) => {console.log(e);console.log('did dismiss')},
+          })
+    }
 
-    function handAddPayer(e: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) {
+    function handAddPayer() {
         present({
             cssClass: 'my-css',
             header: 'Add Payer',
@@ -122,8 +141,7 @@ const CreateBillPage: React.FC = () => {
             ],
             buttons: [
               'Cancel',
-              { text: 'Add', handler: (d) => { 
-                  console.log(d);
+              { text: 'Confirm', handler: (d) => { 
                   axios.get(API_URL + CHECK_USER,{params:d})
                     .then((response) => {
                         if(payerMap.has(d.email)){
@@ -137,14 +155,13 @@ const CreateBillPage: React.FC = () => {
                     .catch((error) =>{
                         setAddFailed(true)
                     })
-                  console.log('ok pressed')
               }},
             ],
             onDidDismiss: (e) => {console.log(e);console.log('did dismiss')},
           })
     }
 
-    function handleSubmit(e: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) {
+    function handleCreateBill() {
         
     }
 
@@ -171,6 +188,14 @@ const CreateBillPage: React.FC = () => {
                 <IonLabel slot="" position="floating">Total Amount</IonLabel>
                 <IonInput type='tel' onIonChange={(event) => {splitAmountMap(Number(event.detail.value))}}></IonInput>
                 
+            </IonItem>
+
+            <IonItem>
+                <IonLabel>Due</IonLabel>
+                <IonButton size="small" onClick={setDueOnClick}>
+                    {due}
+                    <IonIcon slot="end" icon={calendar} />
+                </IonButton>
             </IonItem>
 
             <IonItem lines="inset">
@@ -204,20 +229,20 @@ const CreateBillPage: React.FC = () => {
             )}
             </IonList>
 
-{/* ================================================================================================ */}
             <IonItem lines="none">
-                <IonButton fill="outline" size="small" onClick={(e)=>handAddPayer(e)}>
+                <IonButton fill="outline" size="small" onClick={handAddPayer}>
                     Add Payer
                 </IonButton>
             </IonItem>
 
 {/* ================================================================================================ */}
 
-
-            <IonButton expand="block" disabled={disabled} onClick={(e)=>{console.log("add new payer"); handleSubmit(e)}}>
+            <IonButton expand="block" disabled={disabled} onClick={handleCreateBill}>
                 Create Bill
             </IonButton>
             
+{/* ================================================================================================ */}
+
             <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
                 Cancel
             </IonButton>
@@ -238,7 +263,6 @@ const CreateBillPage: React.FC = () => {
                 position='top'
                 color='danger'
             />
-
 
         </IonPage>
     )

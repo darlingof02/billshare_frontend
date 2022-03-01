@@ -24,9 +24,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import AddBillPage from './pages/AddBillPage';
 import CreateBillPage from './pages/CreateBillPage';
-import AddPayerModelTest from './pages/AddPayerModelTest';
+import TestPage from './pages/TestPage';
 
 
 
@@ -48,8 +47,8 @@ const App: React.FC = () => (
         <Route path='/create_bill'>
           <CreateBillPage />
         </Route>
-        <Route path='/modeltest'>
-          <AddPayerModelTest />
+        <Route path='/test'>
+          <TestPage />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

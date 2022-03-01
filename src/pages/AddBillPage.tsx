@@ -24,12 +24,13 @@ const AddBillPage: React.FC = () => {
 
     const [total, setTotal] = useState(0)
     const [splitMode, setSplitMode] = useState("include")
+    const [disabled, setDisabled] = useState(true)
     const [payerList, setPayerList] = useState<Payer[]>(simulate)
 
     const splitAmount = (totalNum:number) => {
         // console.log("splitMode in splictAmount",splitMode)
         let payerNum = 1;
-        if(splitMode == 'exclude')
+        if(splitMode === 'exclude')
             payerNum = 0
         const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
         
@@ -45,6 +46,10 @@ const AddBillPage: React.FC = () => {
                 payer.amount = Number((totalNum/payerNum).toFixed(2))
         })
         setTotal(totalNum)
+        if(payerList_.length!==0 && totalNum!==0)
+            setDisabled(false)
+        else
+            setDisabled(true)
         setPayerList(payerList_)
     }
 
@@ -128,13 +133,13 @@ const AddBillPage: React.FC = () => {
         const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
         Object.assign(payerList_,payerList)
         for(let i =0;i<payerList_.length;i++ ) {
-            if(payerList_[i].email==index){
+            if(payerList_[i].email===index){
                 payerList_.splice(i,1);
                 break;
             }
         }
         let payerNum = 1;
-        if(splitMode == 'exclude')
+        if(splitMode === 'exclude')
             payerNum = 0
         let totalNum = total
         payerList_.forEach((payer:Payer,idx,payerList_) =>{
@@ -147,8 +152,12 @@ const AddBillPage: React.FC = () => {
             if(payer.autoCalc)
                 payer.amount = Number((totalNum/payerNum).toFixed(2))
         })
-
+        if(payerList_.length === 0)
+            setDisabled(true)
+        else
+            setDisabled(false)
         setPayerList(payerList_)
+
     }
 
 
@@ -213,7 +222,7 @@ const AddBillPage: React.FC = () => {
                 Add Payer
             </IonButton>
 
-            <IonButton expand="block" onClick={()=>{console.log("add new payer")}}>
+            <IonButton expand="block" disabled={disabled} onClick={()=>{console.log("add new payer")}}>
                 Create Bill
             </IonButton>
             

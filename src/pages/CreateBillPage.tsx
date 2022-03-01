@@ -17,9 +17,10 @@ const payerAmount: CSSProperties = {
     width: "60px"
 };
 
-const AddBillPage: React.FC = () => {
+const CreateBillPage: React.FC = () => {
     const history = useHistory()
 
+    const simulateMap: Map<string,Payer> = new Map()
     const simulate: Payer[] = [
         {email: 'yuninx1@uci.edu', amount: 0, autoCalc: true},
         {email: '1052073632@qq.com', amount: 0, autoCalc: true},
@@ -27,107 +28,79 @@ const AddBillPage: React.FC = () => {
         {email: 'yizhuanp1@uci.edu', amount: 0, autoCalc: true}
     ]
 
+    simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.email,payer))
+    const [payerMap, setPayerMap] = useState<Map<string,Payer>>(simulateMap)
+
     const [total, setTotal] = useState(0)
     const [splitMode, setSplitMode] = useState("include")
     const [disabled, setDisabled] = useState(true)
-    const [fill, setFill] = useState("outlined")
-    const [payerList, setPayerList] = useState<Payer[]>(simulate)
 
-    const splitAmount = (totalNum:number) => {
-        // console.log("splitMode in splictAmount",splitMode)
-        let totalNum_ = totalNum
+    const splitAmountMap = (totalNum:number) => {
         let payerNum = 1;
         if(splitMode === 'exclude')
             payerNum = 0
-        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
-        
-        Object.assign(payerList_,payerList)
-        payerList_.forEach((payer:Payer,idx,payerList_) =>{
-            if(!payer.autoCalc)
-                totalNum -= payer.amount;
+        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
+        Array.from(payerMap_.keys()).forEach((pemail:string, idx ) =>{
+            let payer:undefined | Payer = payerMap_.get(pemail)
+            if(!payer!.autoCalc)
+                totalNum -= payer!.amount!;
             else 
                 payerNum++;
         })
-        payerList_.forEach((payer:Payer,idx,payerList_) =>{
-            if(payer.autoCalc)
-                payer.amount = Math.max(Number((totalNum/payerNum).toFixed(2)),0)
+        Array.from(payerMap_.keys()).forEach((pemail:string, idx ) =>{
+            let payer:undefined | Payer = payerMap_.get(pemail)
+            if(payer!.autoCalc)
+                payer!.amount = Math.max(Number((totalNum/payerNum).toFixed(2)),0)
         })
-        
         setTotal(totalNum)
-        if(payerList_.length!==0 && totalNum!==0)
+        if(payerMap_.size!==0 && totalNum!==0)
             setDisabled(false)
         else
             setDisabled(true)
-        setPayerList(payerList_)
+
+        setPayerMap(payerMap_)  
     }
 
-    const handleManuallyButton = (e:any) => {
+    const handleManuallyButtonMap = (e:any) => {
         // console.log(e.target.getAttribute("fill"))
 
         const email = e.target.getAttribute("payer-email");
-        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
-        Object.assign(payerList_,payerList)
-        for(let i =0;i<payerList_.length;i++ ) {
-            if(payerList_[i].email===email){
-                if(e.target.getAttribute("fill") === "outline")
-                    payerList_[i].autoCalc = false;
-                else
-                    payerList_[i].autoCalc = true;
-                break;
-            }
-        }
-        setPayerList(payerList_)
+        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
+        e.target.getAttribute("fill") === "outline"? payerMap_.get(email)!.autoCalc=false: payerMap_.get(email)!.autoCalc=true
+        setPayerMap(payerMap_)
     }
-    const handlePayerInputChange = (e:any) => {
+
+    const handlePayerInputChangeMap = (e:any) => {
         // console.log(e.target.getAttribute("fill"))
         console.log(e.target.value)
         const email = e.target.getAttribute("payer-email");
-        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
-        Object.assign(payerList_,payerList)
-        for(let i =0;i<payerList_.length;i++ ) {
-            if(payerList_[i].email===email){
-                payerList_[i].amount = Number(e.target.value)
-            }
-        }
-        console.log(payerList)
-        setPayerList(payerList_)
+        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
+        payerMap_.get(email)!.amount = Number(e.target.value)
+        setPayerMap(payerMap_)
     }
+    const delMap = (e:any) => {
+        const pemail = e.target.getAttribute("payer-email");
+        console.log(pemail)
+        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
+        payerMap_.delete(pemail)
 
-    
-
-
-    const del = (e:any) => {
-        const index = e.target.getAttribute("payer-email");
-        console.log(index)
-        const payerList_: any[] | ((prevState: Payer[]) => Payer[]) = []
-        Object.assign(payerList_,payerList)
-        for(let i =0;i<payerList_.length;i++ ) {
-            if(payerList_[i].email===index){
-                payerList_.splice(i,1);
-                break;
-            }
-        }
         let payerNum = 1;
         if(splitMode === 'exclude')
             payerNum = 0
         let totalNum = total
-        payerList_.forEach((payer:Payer,idx,payerList_) =>{
-            if(!payer.autoCalc)
-                totalNum -= payer.amount;
-            else 
-                payerNum++;
+        Array.from(payerMap_.values()).forEach((payer:Payer,idx,payerList_) =>{
+            payer.autoCalc? payerNum++ : totalNum -= payer.amount;
         })
-        payerList_.forEach((payer:Payer,idx,payerList_) =>{
+        Array.from(payerMap_.values()).forEach((payer:Payer,idx,payerList_) =>{
             if(payer.autoCalc)
                 payer.amount = Number((totalNum/payerNum).toFixed(2))
         })
-        if(payerList_.length === 0)
-            setDisabled(true)
-        else
-            setDisabled(false)
-        setPayerList(payerList_)
+        payerMap_.size === 0?setDisabled(true):setDisabled(false);
+            
+        setPayerMap(payerMap_)
 
     }
+
     function handleSubmit(e: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) {
         
     }
@@ -153,13 +126,13 @@ const AddBillPage: React.FC = () => {
             <IonContent>
             <IonItem lines="inset">
                 <IonLabel slot="" position="floating">Total Amount</IonLabel>
-                <IonInput type='tel' onIonChange={(event) => {splitAmount(Number(event.detail.value))}}></IonInput>
+                <IonInput type='tel' onIonChange={(event) => {splitAmountMap(Number(event.detail.value))}}></IonInput>
                 
             </IonItem>
 
             <IonItem lines="inset">
                 <IonSegment value={splitMode} onIonChange={e => {setSplitMode(String(e.detail.value))}}
-                 onClick={e=>splitAmount(total)}>
+                 onClick={e=>splitAmountMap(total)}>
                     <IonSegmentButton value="include" >
                         <IonLabel>include me</IonLabel>
                     </IonSegmentButton>
@@ -171,24 +144,26 @@ const AddBillPage: React.FC = () => {
 
 
             <IonList >
-            {payerList.map((payer) => 
+            {Array.from(payerMap.values()).map((payer) => 
                 <IonItem key={payer.email} id={payer.email}>
                     <IonLabel >{payer.email}</IonLabel>
                     <IonInput className="payerInput" payer-email={payer.email} type='tel' 
                         value={String(payer.amount)} slot="end" clearOnEdit={true}
-                        onIonChange={(e)=>{handlePayerInputChange(e)}}></IonInput>
+                        onIonChange={(e)=>{handlePayerInputChangeMap(e)}}></IonInput>
                     <IonButton payer-email={payer.email} slot="end" fill={payer.autoCalc?"outline":"solid"} 
-                        onClick={(e) => handleManuallyButton(e)}>
+                        onClick={(e) => handleManuallyButtonMap(e)}>
                         manually
                     </IonButton>
                     <IonIcon payer-email={payer.email} color="danger" slot="end" ios={removeCircle} 
-                    onClick = {(event) =>{del(event)}}/>
+                    onClick = {(event) =>{delMap(event)}}/>
                 </IonItem>
                 
             )}
             </IonList>
+
+
             <IonItem lines="none">
-                <IonButton fill="outline" size="small" onClick={()=>{console.log("add new payer");setPayerList(simulate);splitAmount(total)}}>
+                <IonButton fill="outline" size="small" onClick={()=>{console.log("add new payer")}}>
                     Add Payer
                 </IonButton>
             </IonItem>
@@ -197,7 +172,7 @@ const AddBillPage: React.FC = () => {
                 Create Bill
             </IonButton>
             
-            <IonButton expand="block" color="danger" onClick={()=>{setPayerList([]); history.push("./home")}}>
+            <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
                 Cancel
             </IonButton>
             </IonContent>
@@ -206,6 +181,6 @@ const AddBillPage: React.FC = () => {
     )
 }
 
-export default AddBillPage
+export default CreateBillPage
 
 

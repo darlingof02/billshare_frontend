@@ -26,6 +26,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import AddBillPage from './pages/AddBillPage';
 import CreateBillPage from './pages/CreateBillPage';
+import AddPayerModelTest from './pages/AddPayerModelTest';
 
 
 
@@ -45,10 +46,10 @@ const App: React.FC = () => (
           <SignUpPage />
         </Route>
         <Route path='/create_bill'>
-          <AddBillPage />
-        </Route>
-        <Route path='/createbill2'>
           <CreateBillPage />
+        </Route>
+        <Route path='/modeltest'>
+          <AddPayerModelTest />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

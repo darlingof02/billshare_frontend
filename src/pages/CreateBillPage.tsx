@@ -1,7 +1,9 @@
-import { IonButton, IonButtons, IonCheckbox, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonCheckbox, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
+import axios from "axios";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle } from 'ionicons/icons';
 import React, { CSSProperties, useState } from "react";
 import { useHistory } from "react-router";
+import { API_URL, CHECK_USER} from "../api/constant";
 import createBillService from "../api/CreateBillService"
 import './AddBillPage.css' 
 
@@ -19,21 +21,24 @@ const payerAmount: CSSProperties = {
 
 const CreateBillPage: React.FC = () => {
     const history = useHistory()
+    const [present] = useIonAlert();
 
     const simulateMap: Map<string,Payer> = new Map()
     const simulate: Payer[] = [
         {email: 'yuninx1@uci.edu', amount: 0, autoCalc: true},
-        {email: '1052073632@qq.com', amount: 0, autoCalc: true},
+        // {email: '1052073632@qq.com', amount: 0, autoCalc: true},
         {email: 'xieyn12345@gmail.com', amount: 0, autoCalc: true},
         {email: 'yizhuanp1@uci.edu', amount: 0, autoCalc: true}
     ]
 
     simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.email,payer))
     const [payerMap, setPayerMap] = useState<Map<string,Payer>>(simulateMap)
-
     const [total, setTotal] = useState(0)
     const [splitMode, setSplitMode] = useState("include")
     const [disabled, setDisabled] = useState(true)
+    const [userExists, setUserExists] = useState(false)
+    const [addFailed, setAddFailed] = useState(false)
+
 
     const splitAmountMap = (totalNum:number) => {
         let payerNum = 1;
@@ -101,6 +106,44 @@ const CreateBillPage: React.FC = () => {
 
     }
 
+
+    function handAddPayer(e: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) {
+        present({
+            cssClass: 'my-css',
+            header: 'Add Payer',
+            message: 'add new payer by his email',
+            inputs: [
+              {
+                  name: 'email',
+                  type: 'email',
+                  placeholder: "input payer's email",
+                  handler: (e) => console.log("input", e)
+              }
+            ],
+            buttons: [
+              'Cancel',
+              { text: 'Add', handler: (d) => { 
+                  console.log(d);
+                  axios.get(API_URL + CHECK_USER,{params:d})
+                    .then((response) => {
+                        if(payerMap.has(d.email)){
+                            setUserExists(true)
+                            return ;
+                        }
+                        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
+                        payerMap_.set(d.email,{email:d.email, amount:0, autoCalc:true})
+                        setPayerMap(payerMap_)
+                    })
+                    .catch((error) =>{
+                        setAddFailed(true)
+                    })
+                  console.log('ok pressed')
+              }},
+            ],
+            onDidDismiss: (e) => {console.log(e);console.log('did dismiss')},
+          })
+    }
+
     function handleSubmit(e: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) {
         
     }
@@ -161,12 +204,15 @@ const CreateBillPage: React.FC = () => {
             )}
             </IonList>
 
-
+{/* ================================================================================================ */}
             <IonItem lines="none">
-                <IonButton fill="outline" size="small" onClick={()=>{console.log("add new payer")}}>
+                <IonButton fill="outline" size="small" onClick={(e)=>handAddPayer(e)}>
                     Add Payer
                 </IonButton>
             </IonItem>
+
+{/* ================================================================================================ */}
+
 
             <IonButton expand="block" disabled={disabled} onClick={(e)=>{console.log("add new payer"); handleSubmit(e)}}>
                 Create Bill
@@ -176,6 +222,23 @@ const CreateBillPage: React.FC = () => {
                 Cancel
             </IonButton>
             </IonContent>
+            <IonToast
+                isOpen={userExists}
+                onDidDismiss={() => setUserExists(false)}
+                message= "User is already in the payer list"
+                duration={1500}
+                position='top'
+                color='success'
+            />
+            <IonToast
+                isOpen={addFailed}
+                onDidDismiss={() => setAddFailed(false)}
+                message= "Add user failed, Email incorrect!"
+                duration={1500}
+                position='top'
+                color='danger'
+            />
+
 
         </IonPage>
     )

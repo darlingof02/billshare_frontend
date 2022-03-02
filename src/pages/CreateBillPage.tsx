@@ -148,8 +148,13 @@ const CreateBillPage: React.FC = () => {
                             return ;
                         }
                         const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
-                        payerMap_.set(d.debtorEmail,{debtorEmail:d.debtorEmail, amount:0, autoCalc:true})
+                        payerMap_.set(d.email,{debtorEmail:d.email, amount:0, autoCalc:true})
+                        console.log(payerMap)
+                        console.log(payerMap_)
+
                         setPayerMap(payerMap_)
+                        console.log(payerMap)
+                        console.log(payerMap_)
                     })
                     .catch((error) =>{
                         setAddFailed(true)
@@ -176,14 +181,13 @@ const CreateBillPage: React.FC = () => {
         }
         console.log(data)
 
-        // axios.post(API_URL + CREATE_BILL,data,config).then((response)=>console.log(response)).catch((error)=>console.log(error))
         axios({
             url: API_URL + CREATE_BILL,
             method: "POST",
             data: data,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
+                // 'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
             },
         }).then((response)=>console.log(response)).catch((error)=>console.log(error))
 
@@ -259,13 +263,10 @@ const CreateBillPage: React.FC = () => {
                 </IonButton>
             </IonItem>
 
-{/* ================================================================================================ */}
-
             <IonButton expand="block" disabled={disabled} onClick={handleCreateBill}>
                 Create Bill
             </IonButton>
             
-{/* ================================================================================================ */}
 
             <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
                 Cancel

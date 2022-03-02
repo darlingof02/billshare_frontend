@@ -1,11 +1,17 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
-import {search,menu, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
+
+import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import {search,menu, ellipsisHorizontal, ellipsisVertical, add } from 'ionicons/icons';
 import MenuComponent from "../components/MenuComponent";
 
+
+
+
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 
 const HomePage: React.FC = () => {
     
+    const history = useHistory()
     const example1: string[] = [
         "first line",
         "second line",
@@ -60,6 +66,11 @@ const HomePage: React.FC = () => {
                     {items.map((item) => <IonItem key={item}><IonLabel>{item}</IonLabel></IonItem>)}
                 </IonList>
             </IonContent>
+            <IonFab vertical="center" horizontal="end" slot="fixed">
+                <IonFabButton onClick={e=>history.push('./create_bill')}>
+                    <IonIcon icon={add} />
+                </IonFabButton>
+            </IonFab>
 
  
         </IonPage>

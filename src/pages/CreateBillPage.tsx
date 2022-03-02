@@ -161,20 +161,7 @@ const CreateBillPage: React.FC = () => {
     }
 
     function handleCreateBill() {
-        /**
-         * data: {
-         *      amount : total,
-         *      createTime: new Date();
-         *      debtorInfos: [
-         *          {
-         *              amount: xxx
-         *              debtorEmail: xxx
-         *          },
-         * 
-         *      ]
-         * }
-         * 
-         */
+
         const data = {
             amount: total,
             createTime: new Date(),
@@ -189,16 +176,16 @@ const CreateBillPage: React.FC = () => {
         }
         console.log(data)
 
-        axios.post(API_URL + CREATE_BILL,data,config).then((response)=>console.log(response)).catch((error)=>console.log(error))
-        // axios({
-        //     url: API_URL + CREATE_BILL,
-        //     method: "POST",
-        //     data: data,
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
-        //     },
-        // }).then((response)=>console.log(response)).catch((error)=>console.log(error))
+        // axios.post(API_URL + CREATE_BILL,data,config).then((response)=>console.log(response)).catch((error)=>console.log(error))
+        axios({
+            url: API_URL + CREATE_BILL,
+            method: "POST",
+            data: data,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
+            },
+        }).then((response)=>console.log(response)).catch((error)=>console.log(error))
 
     }
 

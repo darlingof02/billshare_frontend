@@ -1,17 +1,16 @@
-import { IonButton, IonButtons, IonCheckbox, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
 import React, { CSSProperties, useState } from "react";
 import { useHistory } from "react-router";
-import { API_URL, CHECK_USER} from "../api/constant";
-import createBillService from "../api/CreateBillService"
+import { API_URL, CHECK_USER, CREATE_BILL} from "../api/constant";
 import './AddBillPage.css' 
 
 
 // TODO: 将idx改成payer在list中的idx，就不用遍历列表了
 
 interface Payer {
-    email: string;
+    debtorEmail: string;
     amount: number;
     autoCalc: boolean
 }
@@ -25,13 +24,13 @@ const CreateBillPage: React.FC = () => {
 
     const simulateMap: Map<string,Payer> = new Map()
     const simulate: Payer[] = [
-        {email: 'yuninx1@uci.edu', amount: 0, autoCalc: true},
-        // {email: '1052073632@qq.com', amount: 0, autoCalc: true},
-        {email: 'xieyn12345@gmail.com', amount: 0, autoCalc: true},
-        {email: 'yizhuanp1@uci.edu', amount: 0, autoCalc: true}
+        // {debtorEmail: 'yuninx1@uci.edu', amount: 0, autoCalc: true},
+        // {debtorEmail: '1052073632@qq.com', amount: 0, autoCalc: true},
+        {debtorEmail: 'xieyn12345@gmail.com', amount: 0, autoCalc: true},
+        // {debtorEmail: 'yizhuanp1@uci.edu', amount: 0, autoCalc: true}
     ]
 
-    simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.email,payer))
+    simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.debtorEmail,payer))
     const [payerMap, setPayerMap] = useState<Map<string,Payer>>(simulateMap)
     const [total, setTotal] = useState(0)
     const [splitMode, setSplitMode] = useState("include")
@@ -144,12 +143,12 @@ const CreateBillPage: React.FC = () => {
               { text: 'Confirm', handler: (d) => { 
                   axios.get(API_URL + CHECK_USER,{params:d})
                     .then((response) => {
-                        if(payerMap.has(d.email)){
+                        if(payerMap.has(d.debtorEmail)){
                             setUserExists(true)
                             return ;
                         }
                         const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
-                        payerMap_.set(d.email,{email:d.email, amount:0, autoCalc:true})
+                        payerMap_.set(d.debtorEmail,{debtorEmail:d.debtorEmail, amount:0, autoCalc:true})
                         setPayerMap(payerMap_)
                     })
                     .catch((error) =>{
@@ -162,7 +161,45 @@ const CreateBillPage: React.FC = () => {
     }
 
     function handleCreateBill() {
-        
+        /**
+         * data: {
+         *      amount : total,
+         *      createTime: new Date();
+         *      debtorInfos: [
+         *          {
+         *              amount: xxx
+         *              debtorEmail: xxx
+         *          },
+         * 
+         *      ]
+         * }
+         * 
+         */
+        const data = {
+            amount: total,
+            createTime: new Date(),
+            finishTime: due,
+            debtorInfos: Array.from(payerMap.values())
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
+            },
+        }
+        console.log(data)
+
+        axios.post(API_URL + CREATE_BILL,data,config).then((response)=>console.log(response)).catch((error)=>console.log(error))
+        // axios({
+        //     url: API_URL + CREATE_BILL,
+        //     method: "POST",
+        //     data: data,
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
+        //     },
+        // }).then((response)=>console.log(response)).catch((error)=>console.log(error))
+
     }
 
     return (
@@ -213,16 +250,16 @@ const CreateBillPage: React.FC = () => {
 
             <IonList >
             {Array.from(payerMap.values()).map((payer) => 
-                <IonItem key={payer.email} id={payer.email}>
-                    <IonLabel >{payer.email}</IonLabel>
-                    <IonInput className="payerInput" payer-email={payer.email} type='tel' 
+                <IonItem key={payer.debtorEmail} id={payer.debtorEmail}>
+                    <IonLabel >{payer.debtorEmail}</IonLabel>
+                    <IonInput className="payerInput" payer-email={payer.debtorEmail} type='tel' 
                         value={String(payer.amount)} slot="end" clearOnEdit={true}
                         onIonChange={(e)=>{handlePayerInputChangeMap(e)}}></IonInput>
-                    <IonButton payer-email={payer.email} slot="end" fill={payer.autoCalc?"outline":"solid"} 
+                    <IonButton payer-email={payer.debtorEmail} slot="end" fill={payer.autoCalc?"outline":"solid"} 
                         onClick={(e) => handleManuallyButtonMap(e)}>
                         manually
                     </IonButton>
-                    <IonIcon payer-email={payer.email} color="danger" slot="end" ios={removeCircle} 
+                    <IonIcon payer-email={payer.debtorEmail} color="danger" slot="end" ios={removeCircle} 
                     onClick = {(event) =>{delMap(event)}}/>
                 </IonItem>
                 

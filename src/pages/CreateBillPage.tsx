@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
 import React, { CSSProperties, useState } from "react";
@@ -14,9 +14,11 @@ interface Payer {
     amount: number;
     autoCalc: boolean
 }
-const payerAmount: CSSProperties = {
-    width: "60px"
+const commentInput: CSSProperties = {
+    height: "20%"
+    
 };
+// style="width:200px; height:20px;"
 
 const CreateBillPage: React.FC = () => {
     const history = useHistory()
@@ -33,6 +35,7 @@ const CreateBillPage: React.FC = () => {
     simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.debtorEmail,payer))
     const [payerMap, setPayerMap] = useState<Map<string,Payer>>(simulateMap)
     const [total, setTotal] = useState(0)
+    const [comment, setComment] = useState("")
     const [splitMode, setSplitMode] = useState("include")
     const [disabled, setDisabled] = useState(true)
     const [userExists, setUserExists] = useState(false)
@@ -190,9 +193,11 @@ const CreateBillPage: React.FC = () => {
 
         const data = {
             amount: total,
+            debtorInfos: Array.from(payerMap.values()),
             createTime: new Date(),
             finishTime: due,
-            debtorInfos: Array.from(payerMap.values())
+            comment: comment,
+            
         }
         console.log(data)
 
@@ -278,10 +283,15 @@ const CreateBillPage: React.FC = () => {
                 </IonButton>
             </IonItem>
 
+
+            <IonItem>
+                <IonLabel position="floating"> Comment </IonLabel>
+                <IonTextarea placeholder="Add comments here"  value ={comment} onIonChange={e => setComment(e.detail.value!)}></IonTextarea>
+            </IonItem>
+            
             <IonButton expand="block" disabled={disabled} onClick={handleCreateBill}>
                 Create Bill
             </IonButton>
-            
 
             <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
                 Cancel

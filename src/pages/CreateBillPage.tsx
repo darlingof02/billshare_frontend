@@ -125,7 +125,39 @@ const CreateBillPage: React.FC = () => {
           })
     }
 
-    function handAddPayer() {
+    function handleNewPayer(d:any) {
+        if(payerMap.has(d.debtorEmail)){
+            setUserExists(true)
+            return ;
+        }
+        let totalNum = total
+        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
+        payerMap_.set(d.email,{debtorEmail:d.email, amount:0, autoCalc:true})
+        
+        let payerNum = 1;
+        if(splitMode === 'exclude')
+            payerNum = 0
+        Array.from(payerMap_.keys()).forEach((pemail:string, idx ) =>{
+            let payer:undefined | Payer = payerMap_.get(pemail)
+            if(!payer!.autoCalc)
+                totalNum -= payer!.amount!;
+            else 
+                payerNum++;
+        })
+        Array.from(payerMap_.keys()).forEach((pemail:string, idx ) =>{
+            let payer:undefined | Payer = payerMap_.get(pemail)
+            if(payer!.autoCalc)
+                payer!.amount = Math.max(Number((totalNum/payerNum).toFixed(2)),0)
+        })
+        if(payerMap_.size!==0 && totalNum!==0)
+            setDisabled(false)
+        else
+            setDisabled(true)
+
+        setPayerMap(payerMap_)  
+    }
+
+    function handleAddPayer() {
         present({
             cssClass: 'my-css',
             header: 'Add Payer',
@@ -141,16 +173,10 @@ const CreateBillPage: React.FC = () => {
             buttons: [
               'Cancel',
               { text: 'Confirm', handler: (d) => { 
-                  axios.get(API_URL + CHECK_USER,{params:d})
-                    .then((response) => {
-                        if(payerMap.has(d.debtorEmail)){
-                            setUserExists(true)
-                            return ;
-                        }
-                        const payerMap_ : Map<string,Payer> | ((prevState: Map<string,Payer>) => Map<string,Payer>) = new Map(payerMap)
-                        payerMap_.set(d.debtorEmail,{debtorEmail:d.debtorEmail, amount:0, autoCalc:true})
-                        setPayerMap(payerMap_)
-                    })
+                  axios({
+                      url: API_URL + CHECK_USER,
+                      params:d,
+                  }).then((response) => handleNewPayer(d))
                     .catch((error) =>{
                         setAddFailed(true)
                     })
@@ -168,22 +194,15 @@ const CreateBillPage: React.FC = () => {
             finishTime: due,
             debtorInfos: Array.from(payerMap.values())
         }
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
-            },
-        }
         console.log(data)
 
-        // axios.post(API_URL + CREATE_BILL,data,config).then((response)=>console.log(response)).catch((error)=>console.log(error))
         axios({
             url: API_URL + CREATE_BILL,
             method: "POST",
             data: data,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
+                // 'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
             },
         }).then((response)=>console.log(response)).catch((error)=>console.log(error))
 
@@ -254,18 +273,15 @@ const CreateBillPage: React.FC = () => {
             </IonList>
 
             <IonItem lines="none">
-                <IonButton fill="outline" size="small" onClick={handAddPayer}>
+                <IonButton fill="outline" size="small" onClick={handleAddPayer}>
                     Add Payer
                 </IonButton>
             </IonItem>
-
-{/* ================================================================================================ */}
 
             <IonButton expand="block" disabled={disabled} onClick={handleCreateBill}>
                 Create Bill
             </IonButton>
             
-{/* ================================================================================================ */}
 
             <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
                 Cancel

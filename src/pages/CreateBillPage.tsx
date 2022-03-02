@@ -14,9 +14,8 @@ interface Payer {
     amount: number;
     autoCalc: boolean
 }
-const commentInput: CSSProperties = {
-    height: "20%"
-    
+const textAlignCenter: CSSProperties = {
+    textAlign: "center"
 };
 // style="width:200px; height:20px;"
 
@@ -264,7 +263,7 @@ const CreateBillPage: React.FC = () => {
                 <IonItem key={payer.debtorEmail} id={payer.debtorEmail}>
                     <IonLabel >{payer.debtorEmail}</IonLabel>
                     <IonInput className="payerInput" payer-email={payer.debtorEmail} type='tel' 
-                        value={String(payer.amount)} slot="end" clearOnEdit={true}
+                        value={String(payer.amount)} slot="end" clearOnEdit={true} style={textAlignCenter}
                         onIonChange={(e)=>{handlePayerInputChangeMap(e)}}></IonInput>
                     <IonButton payer-email={payer.debtorEmail} slot="end" fill={payer.autoCalc?"outline":"solid"} 
                         onClick={(e) => handleManuallyButtonMap(e)}>
@@ -304,6 +303,7 @@ const CreateBillPage: React.FC = () => {
                 duration={1500}
                 position='top'
                 color='success'
+                cssClass='toast'
             />
             <IonToast
                 isOpen={addFailed}
@@ -312,6 +312,7 @@ const CreateBillPage: React.FC = () => {
                 duration={1500}
                 position='top'
                 color='danger'
+                cssClass='toast'
             />
 
         </IonPage>

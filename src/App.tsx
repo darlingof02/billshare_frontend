@@ -25,6 +25,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import AddBillPage from './pages/AddBillPage';
+import MenuComponent from './components/MenuComponent';
 
 
 
@@ -46,6 +47,7 @@ const App: React.FC = () => (
         <Route path='/create_bill'>
           <AddBillPage />
         </Route>
+
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

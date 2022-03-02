@@ -1,5 +1,6 @@
-import { IonButton, IonButtons, IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
+import MenuComponent from "../components/MenuComponent";
 
 import React, { useState } from "react";
 
@@ -35,21 +36,14 @@ const HomePage: React.FC = () => {
         
     }
     return (
-        <IonPage>
+        <>
+        
+        <IonPage >
 
+            <MenuComponent />
             <IonToolbar>
-                <IonButtons slot="secondary">
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={menu} />
-                    </IonButton>
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={search} />
-                    </IonButton>
-                </IonButtons>
-                <IonButtons slot="primary">
-                    <IonButton>
-                        <IonIcon slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
-                    </IonButton>
+                <IonButtons slot="start">
+                    <IonMenuButton />
                 </IonButtons>
                 <IonTitle>HomePage</IonTitle>
             </IonToolbar>
@@ -61,6 +55,7 @@ const HomePage: React.FC = () => {
 
 
             <IonContent>
+                
                 <IonList>
                     {items.map((item) => <IonItem key={item}><IonLabel>{item}</IonLabel></IonItem>)}
                 </IonList>
@@ -68,6 +63,7 @@ const HomePage: React.FC = () => {
 
  
         </IonPage>
+        </>
     )
 }
 

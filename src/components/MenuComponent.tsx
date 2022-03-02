@@ -4,11 +4,17 @@ import './MenuComponent.css'
 import { notifications, person, reader, settings } from 'ionicons/icons';
 import Authentication from '../api/Authentication';
 import { useLocalStorage } from '../api/MyHooks';
+import { Redirect, useHistory } from 'react-router';
 
-const MenuComponent: React.FC = () => (
+const MenuComponent: React.FC = () => {
+  
+  let history = useHistory();
+  const logout = () => {
+    Authentication.logout();
+    history.push('/login')
+  }
 
-
-
+  return (
   <>
     <IonMenu side="start" menuId="first" contentId="main">
       <IonHeader>
@@ -53,7 +59,7 @@ const MenuComponent: React.FC = () => (
         
       </IonContent>
       <IonFooter>
-          <IonButton expand='block'>Logout</IonButton>
+          <IonButton expand='block' onClick={logout}>Logout</IonButton>
         </IonFooter>
     </IonMenu>
 
@@ -61,6 +67,7 @@ const MenuComponent: React.FC = () => (
     
     <IonRouterOutlet id='main'></IonRouterOutlet>
   </>
-);
+  )
+};
 
 export default MenuComponent;

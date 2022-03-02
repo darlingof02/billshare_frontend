@@ -1,0 +1,6 @@
+.item-avatar  {     
+    width:100% !important;  
+    height : 100% !important;  
+    max-width: 80px !important;  
+    max-height: 80px !important; 
+}

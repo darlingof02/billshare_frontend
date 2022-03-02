@@ -4,7 +4,7 @@ import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calenda
 import React, { CSSProperties, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL, CHECK_USER, CREATE_BILL} from "../api/constant";
-import './AddBillPage.css' 
+import './CreateBillPage.css' 
 
 
 // TODO: 将idx改成payer在list中的idx，就不用遍历列表了

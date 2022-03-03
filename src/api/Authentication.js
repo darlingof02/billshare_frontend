@@ -6,7 +6,6 @@ import { API_URL } from './constant'
 class Authentication {
 
     register(userInfo) {
-        console.log("fuck")
         console.log(userInfo)
         return axios({
             url: API_URL + '/create_user',

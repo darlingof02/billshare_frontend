@@ -8,6 +8,9 @@ import MenuComponent from "../components/MenuComponent";
 
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import BillService from "../api/BillService";
+import axios from "axios";
+import Authentication from "../api/Authentication";
 
 const HomePage: React.FC = () => {
     
@@ -28,7 +31,14 @@ const HomePage: React.FC = () => {
     ]
     const [items, setItems] = useState<string[]>(example1)
     const [selected, setSelected] = useState<string>('bill')
+
+
     const showBill = () => {
+        BillService.getBillsByEmail(localStorage.getItem('localEmail')).then(
+            (response) => {
+                console.log(response);
+            }
+        )
         // request bills
         setSelected("bill")
         setItems(example1)

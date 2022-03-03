@@ -39,19 +39,19 @@ const MenuComponent: React.FC = () => {
 
         <IonList>
           {/* <IonItem /> */}
-            <IonItem routerLink={`/profile/${localStorage.getItem('email')}`}>
+            <IonItem routerLink={`/profile/${localStorage.getItem('localEmail')}`}>
                 <IonIcon icon={person} slot='start' />
                 <IonLabel>Profile</IonLabel>
             </IonItem>
-            <IonItem routerLink={`/activity/${localStorage.getItem('email')}`}>
+            <IonItem routerLink={`/activity/${localStorage.getItem('localEmail')}`}>
                 <IonIcon icon={reader} slot='start' />
                 <IonLabel>Activity</IonLabel>
             </IonItem>
-            <IonItem routerLink={`/notification/${localStorage.getItem('email')}`}>
+            <IonItem routerLink={`/notification/${localStorage.getItem('localEmail')}`}>
                 <IonIcon icon={notifications} slot='start' />
                 <IonLabel>Notification</IonLabel>
             </IonItem>
-            <IonItem routerLink={`/Setting/${localStorage.getItem('email')}`}>
+            <IonItem routerLink={`/Setting/${localStorage.getItem('localEmail')}`}>
                 <IonIcon icon={settings} slot='start' />
                 <IonLabel>Setting</IonLabel>
             </IonItem>

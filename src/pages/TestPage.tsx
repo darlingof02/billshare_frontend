@@ -1,58 +1,109 @@
-import React, { useState, useRef } from 'react';
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonDatetime,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonModal,
-  IonPage,
-  IonPopover,
-  IonText,
-  useIonAlert
-} from '@ionic/react';
-import { calendar } from 'ionicons/icons';
+import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonIcon, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import axios from "axios";
+import {search,menu, ellipsisHorizontal, ellipsisVertical, add, calendar } from 'ionicons/icons';
 
-const TestPage: React.FC = () => {
-  const [present] = useIonAlert();
-  return (
-    <IonPage>
-      <IonContent fullscreen>
-        <IonButton
-          expand="block"
-          onClick={() =>
-            present({
-              cssClass: 'my-css',
-              header: 'Alert',
-              message: 'alert from hook',
-              inputs: [
-                {
-                  name: 'date',
-                  type: 'date',
-                  handler: (e) => console.log("input", e)
-                }
-              ],
-              buttons: [
-                'Cancel',
-                { text: 'Ok', handler: (d) => console.log('ok pressed') },
-              ],
-              onDidDismiss: (e) => console.log('did dismiss'),
-            })
-          }
-        >
-          Show Alert
-        </IonButton>
-        <IonButton
-          expand="block"
-          onClick={() => present('hello with params', [{ text: 'Ok' }])}
-        >
-          Show Alert using params
-        </IonButton>
-      </IonContent>
-    </IonPage>
-  )
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import { API_URL } from "../api/constant";
+
+interface OwnedBillInfo {
+    bid: number,
+    status: number,
+    due: String|null,
+    amount: number,
+    ownerEmail: String,
+    paidAmount: number,
+    totalAmount: number,
+    debtorNum: number,
+    debtorPaidNum: number,
 }
-export default TestPage;
+
+
+
+
+const HomePage: React.FC = () => {
+
+
+    const [billMap, setBillMap] = useState<Map<number,OwnedBillInfo>>(new Map())
+    
+    useEffect(() => {
+        axios({
+            url: API_URL+"/owned_bills",
+            method: "get",
+            headers: {
+              'Content-Type': 'application/json',
+            //   'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEiLCJleHAiOjE2NDY4OTI0MTMsImlhdCI6MTY0NjI4NzYxM30.9sM_e7-BzSGPL_EgLxmfodptcT7rBDvNqIodlA4ohWtT0R__8ezzNnBmc_8vrnsRvGiFAPYs7b2rEOR5vp6UgQ"
+            },
+          }).then((response) => {
+            response.data.forEach((ownedBillInfo: OwnedBillInfo)=>{
+                billMap.set(ownedBillInfo.bid,ownedBillInfo)
+            })
+            setBillMap(new Map(billMap))
+            console.log(billMap.get(91))
+            // console.log(billMap.get(91)?.due?.getDate())
+
+          }).catch((e)=>console.log(e))
+    },[])
+
+    
+
+    console.log("rendered")
+    const history = useHistory()
+
+    const [selected, setSelected] = useState<string>('bill')
+    const showBill = () => {
+        setSelected("bill")
+    }
+
+    const showDebt = () => {
+        setSelected("indebt")
+        
+    }
+    return (
+        <IonPage>
+
+            <IonToolbar>
+                <IonButtons slot="secondary">
+                    <IonButton >
+                        <IonIcon slot="icon-only" icon={menu} />
+                    </IonButton>
+                    <IonButton >
+                        <IonIcon slot="icon-only" icon={search} />
+                    </IonButton>
+                </IonButtons>
+                <IonButtons slot="primary">
+                    <IonButton>
+                        <IonIcon slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
+                    </IonButton>
+                </IonButtons>
+                <IonTitle>HomePageTest</IonTitle>
+            </IonToolbar>
+
+            <IonSegment value={selected}>
+                <IonSegmentButton value="bill" onClick={showBill}><IonLabel>bill</IonLabel></IonSegmentButton>
+                <IonSegmentButton value="indebt" onClick={showDebt}><IonLabel>indebt</IonLabel></IonSegmentButton>
+            </IonSegment>
+
+
+            <IonContent>
+                <IonList>
+                    {Array.from(billMap.values()).map((billInfo) => 
+                    <IonItem key={billInfo.bid} lines="inset">
+                        <IonLabel slot="start">Amount:</IonLabel>
+                        <IonLabel slot="start">{billInfo.amount}</IonLabel>
+                        <IonButton slot="end" color="success">{billInfo.due?.substring(0,10)}<IonIcon icon={calendar}></IonIcon></IonButton>
+                    </IonItem>)}
+                </IonList>
+            </IonContent>
+            <IonFab vertical="center" horizontal="center" slot="fixed">
+                <IonFabButton onClick={e=>history.push('./create_bill')}>
+                    <IonIcon icon={add} />
+                </IonFabButton>
+            </IonFab>
+
+ 
+        </IonPage>
+    )
+}
+
+export default HomePage

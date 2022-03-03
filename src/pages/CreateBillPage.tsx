@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
 import React, { CSSProperties, useState } from "react";
@@ -7,16 +7,24 @@ import { API_URL, CHECK_USER, CREATE_BILL} from "../api/constant";
 import './CreateBillPage.css' 
 
 
-// TODO: 将idx改成payer在list中的idx，就不用遍历列表了
+/**
+ * TODO: 点击manually， 自动算一下账单
+ *  exclude me切换逻辑
+ * 提交时检查账单是否一直，比如加起来不是总金额这种情况，尤其是包括自己的时候
+ * 
+ *
+ * */ 
+
 
 interface Payer {
     debtorEmail: string;
     amount: number;
     autoCalc: boolean
 }
-const payerAmount: CSSProperties = {
-    width: "60px"
+const textAlignCenter: CSSProperties = {
+    textAlign: "center"
 };
+// style="width:200px; height:20px;"
 
 const CreateBillPage: React.FC = () => {
     const history = useHistory()
@@ -33,10 +41,12 @@ const CreateBillPage: React.FC = () => {
     simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.debtorEmail,payer))
     const [payerMap, setPayerMap] = useState<Map<string,Payer>>(simulateMap)
     const [total, setTotal] = useState(0)
+    const [comment, setComment] = useState("")
     const [splitMode, setSplitMode] = useState("include")
     const [disabled, setDisabled] = useState(true)
     const [userExists, setUserExists] = useState(false)
     const [addFailed, setAddFailed] = useState(false)
+    const [createFailed, setCreateFailed] = useState(false)
     const [due, setDue] = useState<Date|null>(null)
 
 
@@ -190,9 +200,11 @@ const CreateBillPage: React.FC = () => {
 
         const data = {
             amount: total,
+            debtorInfos: Array.from(payerMap.values()),
             createTime: new Date(),
-            finishTime: due,
-            debtorInfos: Array.from(payerMap.values())
+            dueTime: due,
+            comment: comment,
+            
         }
         console.log(data)
 
@@ -204,8 +216,7 @@ const CreateBillPage: React.FC = () => {
                 'Content-Type': 'application/json',
                 // 'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
             },
-        }).then((response)=>console.log(response)).catch((error)=>console.log(error))
-
+        }).then(()=>{history.replace("/home")}).catch((error)=>console.log(error))
     }
 
     return (
@@ -259,7 +270,7 @@ const CreateBillPage: React.FC = () => {
                 <IonItem key={payer.debtorEmail} id={payer.debtorEmail}>
                     <IonLabel >{payer.debtorEmail}</IonLabel>
                     <IonInput className="payerInput" payer-email={payer.debtorEmail} type='tel' 
-                        value={String(payer.amount)} slot="end" clearOnEdit={true}
+                        value={String(payer.amount)} slot="end" clearOnEdit={true} style={textAlignCenter}
                         onIonChange={(e)=>{handlePayerInputChangeMap(e)}}></IonInput>
                     <IonButton payer-email={payer.debtorEmail} slot="end" fill={payer.autoCalc?"outline":"solid"} 
                         onClick={(e) => handleManuallyButtonMap(e)}>
@@ -278,12 +289,17 @@ const CreateBillPage: React.FC = () => {
                 </IonButton>
             </IonItem>
 
+
+            <IonItem>
+                <IonLabel position="floating"> Comment </IonLabel>
+                <IonTextarea placeholder="Add comments here"  value ={comment} onIonChange={e => setComment(e.detail.value!)}></IonTextarea>
+            </IonItem>
+            
             <IonButton expand="block" disabled={disabled} onClick={handleCreateBill}>
                 Create Bill
             </IonButton>
-            
 
-            <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
+            <IonButton expand="block" color="danger" onClick={()=>{ history.replace("./home")}}>
                 Cancel
             </IonButton>
             </IonContent>
@@ -294,6 +310,7 @@ const CreateBillPage: React.FC = () => {
                 duration={1500}
                 position='top'
                 color='success'
+                cssClass='toast'
             />
             <IonToast
                 isOpen={addFailed}
@@ -302,6 +319,16 @@ const CreateBillPage: React.FC = () => {
                 duration={1500}
                 position='top'
                 color='danger'
+                cssClass='toast'
+            />
+            <IonToast
+                isOpen={createFailed}
+                onDidDismiss={() => setCreateFailed(false)}
+                message= "Create bill failed!"
+                duration={1500}
+                position='top'
+                color='danger'
+                cssClass='toast'
             />
 
         </IonPage>

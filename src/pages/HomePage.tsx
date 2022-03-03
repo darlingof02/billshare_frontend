@@ -1,10 +1,12 @@
-import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonIcon, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import axios from "axios";
+
+import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, add, calendar } from 'ionicons/icons';
 
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
+import MenuComponent from "../components/MenuComponent";
 
 interface OwnedBillInfo {
     bid: number,
@@ -60,21 +62,14 @@ const HomePage: React.FC = () => {
         
     }
     return (
-        <IonPage>
+        <>
+        
+        <IonPage >
 
+            <MenuComponent />
             <IonToolbar>
-                <IonButtons slot="secondary">
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={menu} />
-                    </IonButton>
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={search} />
-                    </IonButton>
-                </IonButtons>
-                <IonButtons slot="primary">
-                    <IonButton>
-                        <IonIcon slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
-                    </IonButton>
+                <IonButtons slot="start">
+                    <IonMenuButton />
                 </IonButtons>
                 <IonTitle>HomePageTest</IonTitle>
             </IonToolbar>
@@ -86,6 +81,7 @@ const HomePage: React.FC = () => {
 
 
             <IonContent>
+                
                 <IonList>
                     {Array.from(billMap.values()).map((billInfo) => 
                     <IonItem key={billInfo.bid} lines="inset">
@@ -103,6 +99,7 @@ const HomePage: React.FC = () => {
 
  
         </IonPage>
+        </>
     )
 }
 

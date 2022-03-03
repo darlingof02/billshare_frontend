@@ -7,7 +7,14 @@ import { API_URL, CHECK_USER, CREATE_BILL} from "../api/constant";
 import './CreateBillPage.css' 
 
 
-// TODO: 将idx改成payer在list中的idx，就不用遍历列表了
+/**
+ * TODO: 点击manually， 自动算一下账单
+ *  exclude me切换逻辑
+ * 提交时检查账单是否一直，比如加起来不是总金额这种情况，尤其是包括自己的时候
+ * 
+ *
+ * */ 
+
 
 interface Payer {
     debtorEmail: string;
@@ -39,6 +46,7 @@ const CreateBillPage: React.FC = () => {
     const [disabled, setDisabled] = useState(true)
     const [userExists, setUserExists] = useState(false)
     const [addFailed, setAddFailed] = useState(false)
+    const [createFailed, setCreateFailed] = useState(false)
     const [due, setDue] = useState<Date|null>(null)
 
 
@@ -194,7 +202,7 @@ const CreateBillPage: React.FC = () => {
             amount: total,
             debtorInfos: Array.from(payerMap.values()),
             createTime: new Date(),
-            finishTime: due,
+            dueTime: due,
             comment: comment,
             
         }
@@ -208,8 +216,7 @@ const CreateBillPage: React.FC = () => {
                 'Content-Type': 'application/json',
                 // 'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
             },
-        }).then((response)=>console.log(response)).catch((error)=>console.log(error))
-
+        }).then(()=>{history.replace("/home")}).catch((error)=>console.log(error))
     }
 
     return (
@@ -292,7 +299,7 @@ const CreateBillPage: React.FC = () => {
                 Create Bill
             </IonButton>
 
-            <IonButton expand="block" color="danger" onClick={()=>{ history.push("./home")}}>
+            <IonButton expand="block" color="danger" onClick={()=>{ history.replace("./home")}}>
                 Cancel
             </IonButton>
             </IonContent>
@@ -309,6 +316,15 @@ const CreateBillPage: React.FC = () => {
                 isOpen={addFailed}
                 onDidDismiss={() => setAddFailed(false)}
                 message= "Add user failed, Email incorrect!"
+                duration={1500}
+                position='top'
+                color='danger'
+                cssClass='toast'
+            />
+            <IonToast
+                isOpen={createFailed}
+                onDidDismiss={() => setCreateFailed(false)}
+                message= "Create bill failed!"
                 duration={1500}
                 position='top'
                 color='danger'

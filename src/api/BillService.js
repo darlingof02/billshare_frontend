@@ -9,6 +9,18 @@ class BillService {
             `${API_URL}/owned_bills`,
         )
     }
+
+    getIndebtByBill(id) {
+        return axios.get(
+            `${API_URL}/owned_bills/${id}`,
+        )
+    }
+
+    getBillById(id) {
+        return axios.get(
+            `${API_URL}/bills/${id}`,
+        )
+    }
 }
 
 export default new BillService()

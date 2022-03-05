@@ -30,6 +30,7 @@ import './theme/variables.css';
 
 import CreateBillPage from './pages/CreateBillPage';
 import TestPage from './pages/TestPage';
+import BillDetailPage from './pages/BIllDetailPage';
 
 
 
@@ -54,6 +55,9 @@ const App: React.FC = () => (
         </Route>
         <Route path='/create_bill'>
           <CreateBillPage />
+        </Route>
+        <Route path='/bills/:billId'>
+          <BillDetailPage/>
         </Route>
         <Route path='/test'>
           <TestPage />

@@ -1,22 +1,44 @@
-import { IonAvatar, IonContent, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { IonAvatar, IonContent, IonHeader, IonImg, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
+import { CSSProperties, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import BillService from "../api/BillService";
 import BillComponent from "../components/BillComponent";
 
-interface IndebtInfo {
-    debtId: number,
+export interface BillDetails {
+    ownerId: number,
+    ownerNickName: string,
+    ownerFirstName: string,
+    ownerLastName: string,
+    totalAmount: number,
     status: number,
-    amount: number,
-    debtorAvatar: String|null,
-    debtorNickName: String|null,
+    receipt: ImageBitmap|null,
+    comment: string|null,
+    type: string|null,
+    createTime: string,
+    due: string|null
 }
+export interface Debts {
+    debtorEmail: string,
+    debtorAvatar: null,
+    debtorNickName: string,
+    debtorFirstName: string,
+    debtorLastName: string,
+    debtorTel: number|null,
+    amount: number,
+    status: number,
+    acceptTime: Date|null,
+    payTime: null,
+    debtorId: number
+}
+
+const textAlignCenter: CSSProperties = {
+    textAlign: "center"
+};
 
 const BillDetailPage: React.FC = (props) => {
 
-    const [billDetails, setBillDetail] = useState<any>();
-    // const [indebts, setIndebts] = useState<Map<number, IndebtInfo>>(new Map());
-    const [indebts, setIndebts] = useState([])
+    const [billDetails, setBillDetail] = useState<BillDetails>();
+    const [indebts, setIndebts] = useState<Debts[]>([])
     const { billId } = useParams() as {
         billId: any
     }
@@ -46,7 +68,7 @@ const BillDetailPage: React.FC = (props) => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar style={textAlignCenter}>
                     This is Bill {billId}
                 </IonToolbar>
             </IonHeader>
@@ -59,7 +81,7 @@ const BillDetailPage: React.FC = (props) => {
 
                     <IonItem key={item.debtorId}>
                         <IonAvatar slot="start">
-                            <img src={item.debtorAvatar} />
+                            <IonImg src={item.debtorAvatar} />
                         </IonAvatar>
                         <IonLabel>{item.debtorNickName} Owes You ${item.amount}</IonLabel>
                     </IonItem>

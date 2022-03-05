@@ -30,7 +30,8 @@ import './theme/variables.css';
 
 import CreateBillPage from './pages/CreateBillPage';
 import TestPage from './pages/TestPage';
-import BillDetailPage from './pages/BIllDetailPage';
+import ManangeBillButtonComponent from './pages/TestPage';
+import BillDetailPage from './pages/BillDetailPage';
 
 
 
@@ -59,9 +60,9 @@ const App: React.FC = () => (
         <Route path='/bills/:billId'>
           <BillDetailPage/>
         </Route>
-        <Route path='/test'>
-          <TestPage />
-        </Route>
+        {/* <Route path='/test'>
+          <ManangeBillButtonComponent bid={92}/>
+        </Route> */}
 
       </IonRouterOutlet>
     </IonReactRouter>

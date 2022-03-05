@@ -214,7 +214,6 @@ const CreateBillPage: React.FC = () => {
             data: data,
             headers: {
                 'Content-Type': 'application/json',
-                // 'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5dW5pbngxQHVjaS5lZHUiLCJleHAiOjE2NDY3ODYzNTksImlhdCI6MTY0NjE4MTU1OX0.FAZaXCmqwWSMoW2q959jLDVE42COE6KLVG2AxlAXnbzAadCV_amCikk6pC5CL86w_aBe9rLlwB_8yawdxK3s9Q"
             },
         }).then(()=>{history.replace("/home")}).catch((error)=>console.log(error))
     }

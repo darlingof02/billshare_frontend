@@ -6,104 +6,23 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
 
-interface OwnedBillInfo {
+
+// goal: finish the button to change status!
+// put it into ../components/
+type Props = {
     bid: number,
-    status: number,
-    due: String|null,
-    amount: number,
-    ownerEmail: String,
-    paidAmount: number,
-    totalAmount: number,
-    debtorNum: number,
-    debtorPaidNum: number,
 }
 
-
-
-
-const HomePage: React.FC = () => {
-
-
-    const [billMap, setBillMap] = useState<Map<number,OwnedBillInfo>>(new Map())
-    
-    useEffect(() => {
+const ManangeBillButtonComponent = (props : Props) => {
+    const handleUpgradeStatus = () => {
+        console.log(props.bid)
         axios({
-            url: API_URL+"/owned_bills",
-            method: "get",
-            headers: {
-              'Content-Type': 'application/json',
-            //   'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEiLCJleHAiOjE2NDY4OTI0MTMsImlhdCI6MTY0NjI4NzYxM30.9sM_e7-BzSGPL_EgLxmfodptcT7rBDvNqIodlA4ohWtT0R__8ezzNnBmc_8vrnsRvGiFAPYs7b2rEOR5vp6UgQ"
-            },
-          }).then((response) => {
-            response.data.forEach((ownedBillInfo: OwnedBillInfo)=>{
-                billMap.set(ownedBillInfo.bid,ownedBillInfo)
-            })
-            setBillMap(new Map(billMap))
-            console.log(billMap.get(91))
-            // console.log(billMap.get(91)?.due?.getDate())
-
-          }).catch((e)=>console.log(e))
-    },[])
-
-    
-
-    console.log("rendered")
-    const history = useHistory()
-
-    const [selected, setSelected] = useState<string>('bill')
-    const showBill = () => {
-        setSelected("bill")
+            url: API_URL + `/debt/${props.bid}`,
+            method: "PUT",
+            data: {"bid" : props.bid},
+        })
     }
-
-    const showDebt = () => {
-        setSelected("indebt")
-        
-    }
-    return (
-        <IonPage>
-
-            <IonToolbar>
-                <IonButtons slot="secondary">
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={menu} />
-                    </IonButton>
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={search} />
-                    </IonButton>
-                </IonButtons>
-                <IonButtons slot="primary">
-                    <IonButton>
-                        <IonIcon slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
-                    </IonButton>
-                </IonButtons>
-                <IonTitle>HomePageTest</IonTitle>
-            </IonToolbar>
-
-            <IonSegment value={selected}>
-                <IonSegmentButton value="bill" onClick={showBill}><IonLabel>bill</IonLabel></IonSegmentButton>
-                <IonSegmentButton value="indebt" onClick={showDebt}><IonLabel>indebt</IonLabel></IonSegmentButton>
-            </IonSegment>
-
-
-            <IonContent>
-                <IonList>
-                    {Array.from(billMap.values()).map((billInfo) => 
-                    <IonItem key={billInfo.bid} lines="inset">
-                        <IonLabel slot="start">Amount:</IonLabel>
-                        <IonLabel slot="start">{billInfo.amount}</IonLabel>
-                        <IonButton slot="end" color="success">{billInfo.due?.substring(0,10)}<IonIcon icon={calendar}></IonIcon></IonButton>
-                    </IonItem>)}
-                </IonList>
-            </IonContent>
-            <IonFab vertical="center" horizontal="center" slot="fixed">
-                <IonFabButton onClick={e=>history.push('./create_bill')}>
-                    <IonIcon icon={add} />
-                </IonFabButton>
-            </IonFab>
-
- 
-        </IonPage>
-    )
+    return <IonPage><IonButton onClick={handleUpgradeStatus}>Update</IonButton></IonPage>
 }
 
-export default HomePage
+export default ManangeBillButtonComponent

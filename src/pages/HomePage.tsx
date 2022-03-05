@@ -37,7 +37,6 @@ const HomePage: React.FC = () => {
             method: "get",
             headers: {
               'Content-Type': 'application/json',
-            //   'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEiLCJleHAiOjE2NDY4OTI0MTMsImlhdCI6MTY0NjI4NzYxM30.9sM_e7-BzSGPL_EgLxmfodptcT7rBDvNqIodlA4ohWtT0R__8ezzNnBmc_8vrnsRvGiFAPYs7b2rEOR5vp6UgQ"
             },
           }).then((response) => {
                 console.log(response);
@@ -45,12 +44,8 @@ const HomePage: React.FC = () => {
                     billMap.set(ownedBillInfo.bid,ownedBillInfo)
                 })
                 setBillMap(new Map(billMap))
-                console.log(billMap.get(91))
-            // console.log(billMap.get(91)?.due?.getDate())
 
           }).catch((e)=>console.log(e))
-
-          
     },[])
 
     
@@ -97,26 +92,21 @@ const HomePage: React.FC = () => {
 
 
             <IonContent>
-                
-                <IonList>
-                    
-                        
-                        {Array.from(billMap.values()).map((billInfo) =>  (
+                <IonList> 
+                    {Array.from(billMap.values()).map((billInfo) =>  (
 
-                            <IonItemSliding key={billInfo.bid}>
-                                <IonItemOptions side="end">
-                                    <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
-                                </IonItemOptions>
-                                <IonItem key={billInfo.bid} routerLink={`/bills/${billInfo.bid}`}>
+                        <IonItemSliding key={billInfo.bid} >
+                            <IonItemOptions side="end">
+                                <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
+                            </IonItemOptions>
+                            <IonItem key={billInfo.bid} routerLink={`/bills/${billInfo.bid}`}>
 
-                                    <IonLabel >Amount: {billInfo.amount}</IonLabel>
-                                    <IonLabel slot="end" color="success">{billInfo.due?.substring(0,10)}
-                                    <IonIcon icon={calendar}></IonIcon></IonLabel>
-                                </IonItem>
-                            </IonItemSliding>
-
-                        )
-                        )}
+                                <IonLabel >Amount: {billInfo.amount}</IonLabel>
+                                <IonLabel slot="end" color="success">{billInfo.due?.substring(0,10)}
+                                <IonIcon icon={calendar}></IonIcon></IonLabel>
+                            </IonItem>
+                        </IonItemSliding>
+                    ))}
                     
                 </IonList>
             </IonContent>
@@ -124,6 +114,11 @@ const HomePage: React.FC = () => {
 
             <IonFab vertical="center" horizontal="start" slot="fixed">
                 <IonFabButton onClick={e=>history.push('./create_bill')}>
+                    <IonIcon icon={add} />
+                </IonFabButton>
+            </IonFab>
+            <IonFab vertical="bottom" horizontal="start" slot="fixed">
+                <IonFabButton color="danger" onClick={e=>history.push('./test')}>
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>

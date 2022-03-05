@@ -44,12 +44,8 @@ const HomePage: React.FC = () => {
                     billMap.set(ownedBillInfo.bid,ownedBillInfo)
                 })
                 setBillMap(new Map(billMap))
-                console.log(billMap.get(91))
-            // console.log(billMap.get(91)?.due?.getDate())
 
           }).catch((e)=>console.log(e))
-
-          
     },[])
 
     

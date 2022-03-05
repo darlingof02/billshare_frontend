@@ -34,7 +34,6 @@ const HomePage: React.FC = () => {
             method: "get",
             headers: {
               'Content-Type': 'application/json',
-            //   'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEiLCJleHAiOjE2NDY4OTI0MTMsImlhdCI6MTY0NjI4NzYxM30.9sM_e7-BzSGPL_EgLxmfodptcT7rBDvNqIodlA4ohWtT0R__8ezzNnBmc_8vrnsRvGiFAPYs7b2rEOR5vp6UgQ"
             },
           }).then((response) => {
             response.data.forEach((ownedBillInfo: OwnedBillInfo)=>{
@@ -81,7 +80,6 @@ const HomePage: React.FC = () => {
 
 
             <IonContent>
-                
                 <IonList>
                     {Array.from(billMap.values()).map((billInfo) => 
                     <IonItem key={billInfo.bid} lines="inset">
@@ -93,6 +91,11 @@ const HomePage: React.FC = () => {
             </IonContent>
             <IonFab vertical="center" horizontal="start" slot="fixed">
                 <IonFabButton onClick={e=>history.push('./create_bill')}>
+                    <IonIcon icon={add} />
+                </IonFabButton>
+            </IonFab>
+            <IonFab vertical="bottom" horizontal="start" slot="fixed">
+                <IonFabButton color="danger" onClick={e=>history.push('./test')}>
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>

@@ -30,6 +30,7 @@ import './theme/variables.css';
 
 import CreateBillPage from './pages/CreateBillPage';
 import TestPage from './pages/TestPage';
+import ManangeBillButtonComponent from './pages/TestPage';
 
 
 
@@ -56,7 +57,7 @@ const App: React.FC = () => (
           <CreateBillPage />
         </Route>
         <Route path='/test'>
-          <TestPage />
+          <ManangeBillButtonComponent bid={92}/>
         </Route>
 
       </IonRouterOutlet>

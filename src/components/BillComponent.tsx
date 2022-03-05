@@ -1,7 +1,7 @@
 import { IonCard, IonCardHeader } from "@ionic/react";
 interface Props {
     billInfo: any
-  }
+}
 
 const BillComponent: React.FC<Props> = (props) => {
     return (

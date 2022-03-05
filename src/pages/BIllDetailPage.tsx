@@ -1,5 +1,5 @@
 import { IonAvatar, IonContent, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import BillService from "../api/BillService";
 import BillComponent from "../components/BillComponent";
@@ -11,6 +11,10 @@ interface IndebtInfo {
     debtorAvatar: String|null,
     debtorNickName: String|null,
 }
+
+const textAlignCenter: CSSProperties = {
+    textAlign: "center"
+};
 
 const BillDetailPage: React.FC = (props) => {
 
@@ -46,7 +50,7 @@ const BillDetailPage: React.FC = (props) => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar style={textAlignCenter}>
                     This is Bill {billId}
                 </IonToolbar>
             </IonHeader>

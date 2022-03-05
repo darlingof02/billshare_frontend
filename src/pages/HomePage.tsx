@@ -96,25 +96,21 @@ const HomePage: React.FC = () => {
 
 
             <IonContent>
-                <IonList>
-                    
-                        
-                        {Array.from(billMap.values()).map((billInfo) =>  (
+                <IonList> 
+                    {Array.from(billMap.values()).map((billInfo) =>  (
 
-                            <IonItemSliding key={billInfo.bid}>
-                                <IonItemOptions side="end">
-                                    <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
-                                </IonItemOptions>
-                                <IonItem key={billInfo.bid} routerLink={`/bills/${billInfo.bid}`}>
+                        <IonItemSliding key={billInfo.bid} >
+                            <IonItemOptions side="end">
+                                <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
+                            </IonItemOptions>
+                            <IonItem key={billInfo.bid} routerLink={`/bills/${billInfo.bid}`}>
 
-                                    <IonLabel >Amount: {billInfo.amount}</IonLabel>
-                                    <IonLabel slot="end" color="success">{billInfo.due?.substring(0,10)}
-                                    <IonIcon icon={calendar}></IonIcon></IonLabel>
-                                </IonItem>
-                            </IonItemSliding>
-
-                        )
-                        )}
+                                <IonLabel >Amount: {billInfo.amount}</IonLabel>
+                                <IonLabel slot="end" color="success">{billInfo.due?.substring(0,10)}
+                                <IonIcon icon={calendar}></IonIcon></IonLabel>
+                            </IonItem>
+                        </IonItemSliding>
+                    ))}
                     
                 </IonList>
             </IonContent>

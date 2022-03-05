@@ -16,10 +16,11 @@ const LoginPage: React.FC = () => {
     let history = useHistory();
 
     let login = (email:string, password:string) => {
-        console.log(email + " : " + password)
+        // console.log(email + " : " + password)
         Authentication
         .executeJWTAuthService(email, password)
         .then((response) => {
+            console.log(email)
             setLocalEmail(email)
             Authentication.setupAxiosIntercetors('Bearer ' + response.data.token)
             history.push('/home')

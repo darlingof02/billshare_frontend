@@ -11,8 +11,11 @@ class CreateBillService {
             headers: {
                 'content-type': 'multipart/form-data'
             },
-            data: DataForm
+            data: DataForm,
+            
         })
+
+        axios.post(url,,config ={headers:, par})
     }
 
 

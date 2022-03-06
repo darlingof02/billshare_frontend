@@ -21,7 +21,7 @@ interface Payer {
     amount: number;
     autoCalc: boolean
 }
-const textAlignCenter: CSSProperties = {
+export const textAlignCenter: CSSProperties = {
     textAlign: "center"
 };
 // style="width:200px; height:20px;"

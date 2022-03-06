@@ -1,4 +1,4 @@
-import { IonAvatar, IonContent, IonHeader, IonImg, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
+import { IonAvatar, IonButton, IonContent, IonHeader, IonImg, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
 import { CSSProperties, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import BillService from "../api/BillService";
@@ -17,7 +17,7 @@ export interface BillDetails {
     createTime: string,
     due: string|null
 }
-export interface Debts {
+export interface Debt {
     debtorEmail: string,
     debtorAvatar: null,
     debtorNickName: string,
@@ -38,11 +38,38 @@ const textAlignCenter: CSSProperties = {
 const BillDetailPage: React.FC = (props) => {
 
     const [billDetails, setBillDetail] = useState<BillDetails>();
-    const [indebts, setIndebts] = useState<Debts[]>([])
+    const [indebts, setIndebts] = useState<Debt[]>([])
     const { billId } = useParams() as {
         billId: any
     }
 
+    const buttonStyle = (status:number):CSSProperties => {
+        if(status === 0)
+            return {backgroundColor:"#cccccc"};
+        if(status === 1)
+            return {backgroundColor:"#f4b42a"};
+        if(status === 2)
+            return {backgroundColor:"#80eaca"};
+        return {backgroundColor:"#80eaca"};
+    }
+    const buttonColor = (status:number):string => {
+        if(status === 0)
+            return "medium";
+        if(status === 1)
+            return "warning";
+        if(status === 2)
+            return "secondary";
+        return "success";
+    }
+    const buttonText = (status:number) => {
+        if(status === 0)
+            return "unaccepted";
+        if(status === 1)
+            return "unpaid";
+        if(status === 2)
+            return "confirm";
+        return "finished";
+    }
 
     useEffect(
         () => {
@@ -77,13 +104,15 @@ const BillDetailPage: React.FC = (props) => {
                 <IonListHeader>
                     Indebtors
                 </IonListHeader>
-                {indebts.map((item: any) => (
+                {indebts.map((item: Debt) => (
 
                     <IonItem key={item.debtorId}>
                         <IonAvatar slot="start">
-                            <IonImg src={item.debtorAvatar} />
+                            <IonImg src={String(item.debtorAvatar)} />
                         </IonAvatar>
                         <IonLabel>{item.debtorNickName} Owes You ${item.amount}</IonLabel>
+                        <IonButton disabled = {item.status!==2} color = {buttonColor(item.status)}
+                            onClick={()=>{}}>{buttonText(item.status)}</IonButton>
                     </IonItem>
 
                 ))}

@@ -60,9 +60,9 @@ const App: React.FC = () => (
         <Route path='/bills/:billId'>
           <BillDetailPage/>
         </Route>
-        {/* <Route path='/test'>
+        <Route path='/test'>
           <ManangeBillButtonComponent bid={92}/>
-        </Route> */}
+        </Route>
 
       </IonRouterOutlet>
     </IonReactRouter>

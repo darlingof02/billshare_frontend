@@ -1,12 +1,13 @@
 import axios from "axios";
 
-import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonNote, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, add, calendar } from 'ionicons/icons';
 
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
 import MenuComponent from "../components/MenuComponent";
+import { textAlignCenter } from "./CreateBillPage";
 
 interface OwnedBillInfo {
     bid: number,
@@ -19,11 +20,6 @@ interface OwnedBillInfo {
     debtorNum: number,
     debtorPaidNum: number,
 }
-
-
-
-
-
 
 const HomePage: React.FC = () => {
 
@@ -47,8 +43,6 @@ const HomePage: React.FC = () => {
 
           }).catch((e)=>console.log(e))
     },[])
-
-    
 
     // console.log("rendered")
     const history = useHistory()
@@ -100,10 +94,14 @@ const HomePage: React.FC = () => {
                                 <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
                             </IonItemOptions>
                             <IonItem key={billInfo.bid} routerLink={`/bills/${billInfo.bid}`}>
-
                                 <IonLabel >Amount: {billInfo.amount}</IonLabel>
-                                <IonLabel slot="end" color="success">{billInfo.due?.substring(0,10)}
-                                <IonIcon icon={calendar}></IonIcon></IonLabel>
+                                <IonNote slot="end">
+                                    <h5 style={textAlignCenter}>Due</h5>
+                                    <IonChip  color="success"><IonLabel  color="success">{billInfo.due?.substring(0,10)}
+                                    <IonIcon icon={calendar}></IonIcon></IonLabel></IonChip>
+                                </IonNote>
+                                
+                                
                             </IonItem>
                         </IonItemSliding>
                     ))}

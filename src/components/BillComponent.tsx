@@ -39,7 +39,7 @@ const BillComponent = (props:{billInfo:BillDetails}) => {
                 <IonChip><IonCardHeader>Type: {props.billInfo.type}</IonCardHeader></IonChip>}
             
             <IonCardHeader>
-                Due: <DueChipComponent due={props.billInfo.due}></DueChipComponent>
+                Due: <DueChipComponent due={props.billInfo.due}/>
             </IonCardHeader>
             
         </IonCard>

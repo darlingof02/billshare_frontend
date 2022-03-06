@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonContent, IonHeader, IonImg, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
+import { IonAvatar, IonButton, IonContent, IonHeader, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
 import { CSSProperties, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import BillService from "../api/BillService";
@@ -105,15 +105,20 @@ const BillDetailPage: React.FC = (props) => {
                     Indebtors
                 </IonListHeader>
                 {indebts.map((item: Debt) => (
+                    <IonItemSliding key={item.debtorId}>
+                        <IonItemOptions side="end">
+                            <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
+                        </IonItemOptions>
+                        <IonItem key={item.debtorId}>
+                            <IonAvatar slot="start">
+                                <IonImg src={String(item.debtorAvatar)} />
+                            </IonAvatar>
+                            <IonLabel>{item.debtorNickName} Owes You ${item.amount}</IonLabel>
+                            <IonButton disabled = {item.status!==2} color = {buttonColor(item.status)}
+                                onClick={()=>{}}>{buttonText(item.status)}</IonButton>
+                        </IonItem>
+                    </IonItemSliding>
 
-                    <IonItem key={item.debtorId}>
-                        <IonAvatar slot="start">
-                            <IonImg src={String(item.debtorAvatar)} />
-                        </IonAvatar>
-                        <IonLabel>{item.debtorNickName} Owes You ${item.amount}</IonLabel>
-                        <IonButton disabled = {item.status!==2} color = {buttonColor(item.status)}
-                            onClick={()=>{}}>{buttonText(item.status)}</IonButton>
-                    </IonItem>
 
                 ))}
 

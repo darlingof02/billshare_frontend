@@ -1,5 +1,6 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonImg, IonLabel } from "@ionic/react";
 import { BillDetails } from "../pages/BillDetailPage"
+import { DueChipComponent } from "./DueChipComponent";
 
 // JS 推荐这种方式 | 可以搜一下 react typescript props
 
@@ -38,7 +39,7 @@ const BillComponent = (props:{billInfo:BillDetails}) => {
                 <IonChip><IonCardHeader>Type: {props.billInfo.type}</IonCardHeader></IonChip>}
             
             <IonCardHeader>
-                Due: <IonChip color={DueColor(props.billInfo.due)}>{props.billInfo.due == null? "No due":props.billInfo.due.substring(0,10)}</IonChip>
+                Due: <DueChipComponent due={props.billInfo.due}></DueChipComponent>
             </IonCardHeader>
             
         </IonCard>

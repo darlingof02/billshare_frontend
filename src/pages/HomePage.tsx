@@ -8,11 +8,12 @@ import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
 import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
+import { DueChipComponent } from "../components/DueChipComponent";
 
 interface OwnedBillInfo {
     bid: number,
     status: number,
-    due: String|null,
+    due: string|null,
     amount: number,
     ownerEmail: String,
     paidAmount: number,
@@ -21,11 +22,19 @@ interface OwnedBillInfo {
     debtorPaidNum: number,
 }
 
+interface InDebtInfo {
+    bid: number,
+    oname: number,
+    status: number,
+    due: string|null,
+    amount: number,
+}
+
 const HomePage: React.FC = () => {
 
+    const [billList, setBillList] = useState<OwnedBillInfo[]>([])
+    const [debtList, setDebtList] = useState<InDebtInfo[]>([])
 
-    const [billMap, setBillMap] = useState<Map<number,OwnedBillInfo>>(new Map())
-    const [debtMap, setDebtMap] = useState<Map<number,OwnedBillInfo>>(new Map())
     
     useEffect(() => {
         axios({
@@ -36,11 +45,19 @@ const HomePage: React.FC = () => {
             },
           }).then((response) => {
                 console.log(response);
-                response.data.forEach((ownedBillInfo: OwnedBillInfo)=>{
-                    billMap.set(ownedBillInfo.bid,ownedBillInfo)
-                })
-                setBillMap(new Map(billMap))
+                setBillList(response.data) 
 
+          }).catch((e)=>console.log(e))
+
+          axios({
+            url: API_URL+"/unarchived_debts",
+            method: "get",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then((response) => {
+                console.log("debts: ",response);
+                setDebtList(response.data) 
           }).catch((e)=>console.log(e))
     },[])
 
@@ -51,24 +68,13 @@ const HomePage: React.FC = () => {
 
 
     const showBill = () => {
-
-        // BillService.getBillsByEmail(localStorage.getItem('localEmail')).then(
-        //     (response) => {
-        //         console.log(response);
-        //     }
-        // )
-        // request bills
-
         setSelected("bill")
     }
 
     const showDebt = () => {
         setSelected("indebt")
-        
     }
-    return (
-        <>
-        
+    return (        
         <IonPage >
 
             <MenuComponent />
@@ -87,25 +93,36 @@ const HomePage: React.FC = () => {
 
             <IonContent>
                 <IonList> 
-                    {Array.from(billMap.values()).map((billInfo) =>  (
+                    {selected == "bill" ? billList.map((billInfo) =>  (
 
-                        <IonItemSliding key={billInfo.bid} >
+                        <IonItemSliding key={billInfo.bid}>
                             <IonItemOptions side="end">
                                 <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
                             </IonItemOptions>
                             <IonItem key={billInfo.bid} routerLink={`/bills/${billInfo.bid}`}>
                                 <IonLabel >Amount: {billInfo.amount}</IonLabel>
+                                <p style={textAlignCenter}>{billInfo.debtorPaidNum}</p>
                                 <IonNote slot="end">
-                                    <h5 style={textAlignCenter}>Due</h5>
-                                    <IonChip  color="success"><IonLabel  color="success">{billInfo.due?.substring(0,10)}
-                                    <IonIcon icon={calendar}></IonIcon></IonLabel></IonChip>
+                                    <DueChipComponent due={billInfo.due}></DueChipComponent>
                                 </IonNote>
                                 
+                            </IonItem>
+                        </IonItemSliding>
+                    )): debtList.map((inDebtInfo:InDebtInfo) =>  (
+
+                        <IonItemSliding key={inDebtInfo.bid}>
+                            <IonItemOptions side="end">
+                                <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
+                            </IonItemOptions>
+                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`}>
+                                <IonLabel >Owe ${inDebtInfo.amount} to {inDebtInfo.oname}</IonLabel>
+                                <IonNote slot="end">
+                                    <DueChipComponent due={inDebtInfo.due}></DueChipComponent>
+                                </IonNote>
                                 
                             </IonItem>
                         </IonItemSliding>
                     ))}
-                    
                 </IonList>
             </IonContent>
 
@@ -123,7 +140,6 @@ const HomePage: React.FC = () => {
 
  
         </IonPage>
-        </>
     )
 }
 

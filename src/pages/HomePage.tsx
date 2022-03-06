@@ -30,35 +30,43 @@ interface InDebtInfo {
     amount: number,
 }
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC = (props:any) => {
 
     const [billList, setBillList] = useState<OwnedBillInfo[]>([])
     const [debtList, setDebtList] = useState<InDebtInfo[]>([])
 
-    
-    useEffect(() => {
+    const fetchData = () => {
         axios({
             url: API_URL+"/owned_bills",
             method: "get",
             headers: {
-              'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             },
-          }).then((response) => {
+        }).then((response) => {
                 console.log(response);
                 setBillList(response.data) 
 
-          }).catch((e)=>console.log(e))
+        }).catch((e)=>console.log(e));
 
-          axios({
-            url: API_URL+"/unarchived_debts",
-            method: "get",
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then((response) => {
-                console.log("debts: ",response);
-                setDebtList(response.data) 
-          }).catch((e)=>console.log(e))
+      axios({
+        url: API_URL+"/unarchived_debts",
+        method: "get",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+            console.log("debts: ",response); 
+            setDebtList(response.data) 
+      }).catch((e)=>console.log(e));
+    }
+
+
+    useEffect(() => {
+        fetchData()
+        const interval = setInterval(() =>{       
+            fetchData();
+        }, 2000)
+        return ()=>clearInterval(interval); 
     },[])
 
     // console.log("rendered")
@@ -103,7 +111,7 @@ const HomePage: React.FC = () => {
                                 <IonLabel >Amount: {billInfo.amount}</IonLabel>
                                 <p style={textAlignCenter}>{billInfo.debtorPaidNum}</p>
                                 <IonNote slot="end">
-                                    <DueChipComponent due={billInfo.due}></DueChipComponent>
+                                    <DueChipComponent due={billInfo.due}/>
                                 </IonNote>
                                 
                             </IonItem>
@@ -117,7 +125,7 @@ const HomePage: React.FC = () => {
                             <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`}>
                                 <IonLabel >Owe ${inDebtInfo.amount} to {inDebtInfo.oname}</IonLabel>
                                 <IonNote slot="end">
-                                    <DueChipComponent due={inDebtInfo.due}></DueChipComponent>
+                                    <DueChipComponent due={inDebtInfo.due}/>
                                 </IonNote>
                                 
                             </IonItem>
@@ -133,7 +141,7 @@ const HomePage: React.FC = () => {
                 </IonFabButton>
             </IonFab>
             <IonFab vertical="bottom" horizontal="start" slot="fixed">
-                <IonFabButton color="danger" onClick={e=>history.push('./test')}>
+                <IonFabButton color="danger" onClick={e=>{history.push('./test');}}>
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>

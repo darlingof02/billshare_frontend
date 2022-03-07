@@ -1,18 +1,25 @@
 import React from 'react';
-import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonRouterOutlet, IonAvatar, IonLabel, IonRow, IonCol, IonIcon, IonButton, IonFooter } from '@ionic/react';
+import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonRouterOutlet, IonAvatar, IonLabel, IonRow, IonCol, IonIcon, IonButton, IonFooter, IonImg } from '@ionic/react';
 import './MenuComponent.css'
 import { notifications, person, reader, settings } from 'ionicons/icons';
 import Authentication from '../api/Authentication';
 import { useLocalStorage } from '../api/MyHooks';
 import { Redirect, useHistory } from 'react-router';
+import { UserInfo } from "../pages/HomePage";
 
-const MenuComponent: React.FC = () => {
+
+
+
+const MenuComponent = (props:{userInfo: UserInfo|undefined}) => {
   
   let history = useHistory();
   const logout = () => {
     Authentication.logout();
     history.push('/login')
   }
+
+
+
 
   return (
   <>
@@ -23,14 +30,14 @@ const MenuComponent: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className='ion-padding'>
-        <IonRow className="vertical-align-content" style={{height: "15%"}}>
+        <IonRow className="vertical-align-content" style={{height: "18%"}}>
             <IonCol size='6'>
                 <IonAvatar className='item-avatar'>
-                    <img src="https://source.unsplash.com/gySMaocSdqs/600x300" alt="cat" />
+                    <IonImg src="https://source.unsplash.com/gySMaocSdqs/600x300" alt="cat" />
                 </IonAvatar>
             </IonCol>
             <IonCol size='6' style={{padding: 40}}>
-                Name
+                {props.userInfo == undefined ? null : props.userInfo.nickName}
             </IonCol>
 
         </IonRow>

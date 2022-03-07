@@ -9,6 +9,7 @@ import { API_URL } from "../api/constant";
 import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
+import UserSevice from "../api/UserService"
 
 interface OwnedBillInfo {
     bid: number,
@@ -31,10 +32,21 @@ interface InDebtInfo {
 }
 let interval:any = null
 
+export interface UserInfo {
+    firstName: string,
+    lastName: string,
+    nickName: string,
+    email: string,
+    tel: number,
+    avatar: string|null,
+    uid: number,
+  }
+
 const HomePage: React.FC = (props:any) => {
 
     const [billList, setBillList] = useState<OwnedBillInfo[]>([])
     const [debtList, setDebtList] = useState<InDebtInfo[]>([])
+    const [userInfo, setUserInfo] = useState<UserInfo>()
 
     const history = useHistory()
     const [selected, setSelected] = useState<string>('bill')
@@ -48,7 +60,7 @@ const HomePage: React.FC = (props:any) => {
             'Content-Type': 'application/json',
             },
         }).then((response) => {
-                console.log(response);
+                // console.log(response);
                 setBillList(response.data) 
 
         }).catch((e)=>console.log(e));
@@ -61,10 +73,10 @@ const HomePage: React.FC = (props:any) => {
               'Content-Type': 'application/json',
             },
           }).then((response) => {
-                console.log("debts: ",response); 
                 setDebtList(response.data) 
           }).catch((e)=>console.log(e));
     }
+
 
     const restartInterval = (func:Function) => {
         func()
@@ -78,11 +90,23 @@ const HomePage: React.FC = (props:any) => {
 
 
     useEffect(() => {
+
         fetchBills()
         fetchDebts()
         restartInterval(fetchBills)
         console.log("页面挂载",interval)
+        
+
+        UserSevice.getUserBasicInfo()
+        .then((response) => {
+            console.log(response.data);
+            setUserInfo(response.data);
+          }).catch((e) => {
+              console.log(e)
+          })
+
         return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
+
     },[])
 
     const showBill = () => {
@@ -96,7 +120,8 @@ const HomePage: React.FC = (props:any) => {
     }
     return (        
         <IonPage >
-            <MenuComponent />
+
+            <MenuComponent userInfo={userInfo}/>
             <IonToolbar>
                 <IonButtons slot="start">
                     <IonMenuButton />

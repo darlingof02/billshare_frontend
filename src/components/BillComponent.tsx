@@ -1,5 +1,5 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonImg, IonLabel } from "@ionic/react";
-import { BillDetails } from "../pages/BillDetailPage"
+import { BillDetails } from "../pages/BillDetailPage";
 import { DueChipComponent } from "./DueChipComponent";
 
 // JS 推荐这种方式 | 可以搜一下 react typescript props
@@ -24,9 +24,9 @@ const BillComponent = (props:{billInfo:BillDetails}) => {
 
     return (
         <IonCard>
-            <IonImg src="https://source.unsplash.com/random/300x100" />
+            <IonImg src="https://source.unsplash.com/random/300x150" />
             <IonCardHeader>
-                Bill owner: <IonChip>{props.billInfo.ownerFirstName}</IonChip>
+                Bill owner: <IonChip>{props.billInfo.ownerNickName}</IonChip>
             </IonCardHeader>
 
             {props.billInfo.comment == null || props.billInfo.comment?.length == 0? null : 

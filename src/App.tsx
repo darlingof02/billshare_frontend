@@ -31,7 +31,7 @@ import './theme/variables.css';
 import CreateBillPage from './pages/CreateBillPage';
 import TestPage from './pages/TestPage';
 import ManangeBillButtonComponent from './pages/TestPage';
-import BillDetailPage from './pages/BillDetailPage';
+import BillDetailPage from './pages/BillDetailPage'
 
 
 

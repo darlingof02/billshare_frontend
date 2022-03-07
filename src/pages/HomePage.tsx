@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonNote, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, add, calendar } from 'ionicons/icons';
-
+import {createBrowserHistory} from "history"
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
@@ -29,12 +29,16 @@ interface InDebtInfo {
     due: string|null,
     amount: number,
 }
-
+let interval:any = null
 const HomePage: React.FC = (props:any) => {
 
     const [billList, setBillList] = useState<OwnedBillInfo[]>([])
     const [debtList, setDebtList] = useState<InDebtInfo[]>([])
 
+    const history = useHistory()
+    // const history = props.history
+    const [selected, setSelected] = useState<string>('bill')
+    
     const fetchData = () => {
         axios({
             url: API_URL+"/owned_bills",
@@ -60,20 +64,19 @@ const HomePage: React.FC = (props:any) => {
       }).catch((e)=>console.log(e));
     }
 
+    
 
     useEffect(() => {
+        console.log(history)
+        console.log(props.history)
         fetchData()
-        const interval = setInterval(() =>{       
-            fetchData();
+        interval = setInterval(() =>{  
+            if(history.location.pathname ==="/home")     
+                fetchData();
         }, 2000)
-        return ()=>clearInterval(interval); 
+        console.log("页面挂载",interval)
+        return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
     },[])
-
-    // console.log("rendered")
-    const history = useHistory()
-
-    const [selected, setSelected] = useState<string>('bill')
-
 
     const showBill = () => {
         setSelected("bill")
@@ -122,7 +125,7 @@ const HomePage: React.FC = (props:any) => {
                             <IonItemOptions side="end">
                                 <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
                             </IonItemOptions>
-                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`}>
+                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`} >
                                 <IonLabel >Owe ${inDebtInfo.amount} to {inDebtInfo.oname}</IonLabel>
                                 <IonNote slot="end">
                                     <DueChipComponent due={inDebtInfo.due}/>
@@ -136,7 +139,7 @@ const HomePage: React.FC = (props:any) => {
 
 
             <IonFab vertical="center" horizontal="start" slot="fixed">
-                <IonFabButton onClick={e=>history.push('./create_bill')}>
+                <IonFabButton onClick={e=>history.push("./create_bill")}>
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>

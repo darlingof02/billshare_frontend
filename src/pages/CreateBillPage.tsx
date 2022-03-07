@@ -1,7 +1,7 @@
 import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL, CHECK_USER, CREATE_BILL} from "../api/constant";
 import './CreateBillPage.css' 
@@ -26,7 +26,7 @@ export const textAlignCenter: CSSProperties = {
 };
 // style="width:200px; height:20px;"
 
-const CreateBillPage: React.FC = () => {
+const CreateBillPage: React.FC = (props:any) => {
     const history = useHistory()
     const [present] = useIonAlert();
 

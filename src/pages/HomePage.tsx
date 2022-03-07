@@ -9,6 +9,7 @@ import { API_URL } from "../api/constant";
 import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
+import UserSevice from "../api/UserService"
 
 interface OwnedBillInfo {
     bid: number,
@@ -30,10 +31,21 @@ interface InDebtInfo {
     amount: number,
 }
 
+export interface UserInfo {
+    firstName: string,
+    lastName: string,
+    nickName: string,
+    email: string,
+    tel: number,
+    avatar: string|null,
+    uid: number,
+  }
+
 const HomePage: React.FC = (props:any) => {
 
     const [billList, setBillList] = useState<OwnedBillInfo[]>([])
     const [debtList, setDebtList] = useState<InDebtInfo[]>([])
+    const [userInfo, setUserInfo] = useState<UserInfo>()
 
     const fetchData = () => {
         axios({
@@ -43,7 +55,7 @@ const HomePage: React.FC = (props:any) => {
             'Content-Type': 'application/json',
             },
         }).then((response) => {
-                console.log(response);
+                // console.log(response);
                 setBillList(response.data) 
 
         }).catch((e)=>console.log(e));
@@ -55,13 +67,23 @@ const HomePage: React.FC = (props:any) => {
           'Content-Type': 'application/json',
         },
       }).then((response) => {
-            console.log("debts: ",response); 
+            // console.log("debts: ",response); 
             setDebtList(response.data) 
       }).catch((e)=>console.log(e));
+
+
+      
     }
 
 
     useEffect(() => {
+        UserSevice.getUserBasicInfo()
+        .then((response) => {
+            console.log(response.data);
+            setUserInfo(response.data);
+          }).catch((e) => {
+              console.log(e)
+          })
         fetchData()
         const interval = setInterval(() =>{       
             fetchData();
@@ -85,7 +107,7 @@ const HomePage: React.FC = (props:any) => {
     return (        
         <IonPage >
 
-            <MenuComponent />
+            <MenuComponent userInfo={userInfo}/>
             <IonToolbar>
                 <IonButtons slot="start">
                     <IonMenuButton />

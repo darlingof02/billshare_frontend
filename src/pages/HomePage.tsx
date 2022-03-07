@@ -30,16 +30,17 @@ interface InDebtInfo {
     amount: number,
 }
 let interval:any = null
+
 const HomePage: React.FC = (props:any) => {
 
     const [billList, setBillList] = useState<OwnedBillInfo[]>([])
     const [debtList, setDebtList] = useState<InDebtInfo[]>([])
 
     const history = useHistory()
-    // const history = props.history
     const [selected, setSelected] = useState<string>('bill')
     
-    const fetchData = () => {
+
+    const fetchBills = () => {
         axios({
             url: API_URL+"/owned_bills",
             method: "get",
@@ -51,43 +52,50 @@ const HomePage: React.FC = (props:any) => {
                 setBillList(response.data) 
 
         }).catch((e)=>console.log(e));
-
-      axios({
-        url: API_URL+"/unarchived_debts",
-        method: "get",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((response) => {
-            console.log("debts: ",response); 
-            setDebtList(response.data) 
-      }).catch((e)=>console.log(e));
+    }
+    const fetchDebts = () => {
+        axios({
+            url: API_URL+"/unarchived_debts",
+            method: "get",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then((response) => {
+                console.log("debts: ",response); 
+                setDebtList(response.data) 
+          }).catch((e)=>console.log(e));
     }
 
-    
+    const restartInterval = (func:Function) => {
+        func()
+        clearInterval(interval)
+        interval = setInterval(() =>{  
+            if(history.location.pathname ==="/home") {
+                func()
+            }
+        }, 2000)
+    }
+
 
     useEffect(() => {
-        console.log(history)
-        console.log(props.history)
-        fetchData()
-        interval = setInterval(() =>{  
-            if(history.location.pathname ==="/home")     
-                fetchData();
-        }, 2000)
+        fetchBills()
+        fetchDebts()
+        restartInterval(fetchBills)
         console.log("页面挂载",interval)
         return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
     },[])
 
     const showBill = () => {
         setSelected("bill")
+        restartInterval(fetchBills)
     }
 
     const showDebt = () => {
         setSelected("indebt")
+        restartInterval(fetchDebts)
     }
     return (        
         <IonPage >
-
             <MenuComponent />
             <IonToolbar>
                 <IonButtons slot="start">

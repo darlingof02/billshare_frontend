@@ -88,6 +88,23 @@ const HomePage: React.FC = (props:any) => {
         }, 2000)
     }
 
+    const handleDebtUpdate = (e:any) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const bid = e.target.getAttribute("debtor-id")
+        const status = e.target.getAttribute("debtor-status")
+
+        console.log(bid)
+        console.log(debtList)
+        axios({
+            url: API_URL + `/debts/${bid}`,
+            method: "PUT",
+            data: {status:Number(status)}
+        }).then(showDebt).catch(showDebt)
+    }
+
+
 
     useEffect(() => {
 
@@ -148,8 +165,7 @@ const HomePage: React.FC = (props:any) => {
                                 <p style={textAlignCenter}>{billInfo.debtorPaidNum}</p>
                                 <IonNote slot="end">
                                     <DueChipComponent due={billInfo.due}/>
-                                </IonNote>
-                                
+                                </IonNote>                                
                             </IonItem>
                         </IonItemSliding>
                     )): debtList.map((inDebtInfo:InDebtInfo) =>  (
@@ -163,7 +179,8 @@ const HomePage: React.FC = (props:any) => {
                                 <IonNote slot="end">
                                     <DueChipComponent due={inDebtInfo.due}/>
                                 </IonNote>
-                                
+                                <IonButton debtor-id = {inDebtInfo.bid} debtor-status={inDebtInfo.status} 
+                                 slot="end" onClick={(e)=>handleDebtUpdate(e)}>Update info</IonButton>
                             </IonItem>
                         </IonItemSliding>
                     ))}

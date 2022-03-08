@@ -1,8 +1,9 @@
 import { IonAvatar, IonButton, IonContent, IonHeader, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
 import { CSSProperties, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import BillService from "../api/BillService";
 import BillComponent from "../components/BillComponent";
+import {UpdateDebtStatusButton} from "../components/OwnerUpdateStatusButton"
 
 export interface BillDetails {
     ownerId: number,
@@ -35,6 +36,8 @@ const textAlignCenter: CSSProperties = {
     textAlign: "center"
 };
 
+
+
 const BillDetailPage: React.FC = (props) => {
 
     const [billDetails, setBillDetail] = useState<BillDetails>();
@@ -42,55 +45,30 @@ const BillDetailPage: React.FC = (props) => {
     const { billId } = useParams() as {
         billId: any
     }
+    const history = useHistory()
+    console.log(history.location.pathname)
+    console.log(history.location.pathname.substring(history.location.pathname.lastIndexOf("/")+1))
+    const bid = Number(history.location.pathname.substring(history.location.pathname.lastIndexOf("/")+1))
+    const fetchData = () => {
+        console.log("fetched data")
+        BillService.getIndebtByBill(billId)
+        .then(
+            (response) => {
+                console.log(response.data)
+                setIndebts(response.data)
+            }
+        )
 
-    const buttonStyle = (status:number):CSSProperties => {
-        if(status === 0)
-            return {backgroundColor:"#cccccc"};
-        if(status === 1)
-            return {backgroundColor:"#f4b42a"};
-        if(status === 2)
-            return {backgroundColor:"#80eaca"};
-        return {backgroundColor:"#80eaca"};
-    }
-    const buttonColor = (status:number):string => {
-        if(status === 0)
-            return "medium";
-        if(status === 1)
-            return "warning";
-        if(status === 2)
-            return "secondary";
-        return "success";
-    }
-    const buttonText = (status:number) => {
-        if(status === 0)
-            return "unaccepted";
-        if(status === 1)
-            return "unpaid";
-        if(status === 2)
-            return "confirm";
-        return "finished";
+        BillService.getBillById(billId)
+        .then(
+            (response) => {
+                console.log(response.data)
+                setBillDetail(response.data)
+            }
+        )
     }
 
-    useEffect(
-        () => {
-            BillService.getIndebtByBill(billId)
-            .then(
-                (response) => {
-                    console.log(response.data)
-                    setIndebts(response.data)
-                }
-            )
-
-            BillService.getBillById(billId)
-            .then(
-                (response) => {
-                    console.log(response.data)
-                    setBillDetail(response.data)
-                }
-            )
-        },
-        []
-    )
+    useEffect(fetchData,[])
 
     return (
         <IonPage>
@@ -114,15 +92,11 @@ const BillDetailPage: React.FC = (props) => {
                                 <IonImg src={String(item.debtorAvatar)} />
                             </IonAvatar>
                             <IonLabel>{item.debtorNickName} Owes You ${item.amount}</IonLabel>
-                            <IonButton disabled = {item.status!==2} color = {buttonColor(item.status)}
-                                onClick={()=>{}}>{buttonText(item.status)}</IonButton>
+                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} refresh={fetchData}></UpdateDebtStatusButton>
+
                         </IonItem>
                     </IonItemSliding>
-
-
                 ))}
-
-
             </IonContent>
         </IonPage>
     );

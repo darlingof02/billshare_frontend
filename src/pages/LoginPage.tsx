@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 
 
-const LoginPage: React.FC = () => {
+const LoginPage: React.FC = (props:any) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isIncorrect, setIncorrect] = useState(false)

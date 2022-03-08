@@ -45,17 +45,17 @@ const App: React.FC = () => (
         <Route path='/' exact render={()=><Redirect to="/login"></Redirect>}>
           
         </Route>
-        <Route path='/login'>
-          <LoginPage />
+        <Route path='/login' exact component={LoginPage}>
+          {/* <LoginPage /> */}
         </Route>
-        <Route path='/home'>
-          <HomePage />
+        <Route path='/home' exact component={HomePage}>
+          
         </Route>
         <Route path='/signup'>
           <SignUpPage />
         </Route>
-        <Route path='/create_bill'>
-          <CreateBillPage />
+        <Route path='/create_bill' exact component={CreateBillPage}>
+          {/* <CreateBillPage /> */}
         </Route>
         <Route path='/bills/:billId'>
           <BillDetailPage/>

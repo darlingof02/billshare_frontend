@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonNote, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, add, calendar } from 'ionicons/icons';
-
+import {createBrowserHistory} from "history"
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
@@ -30,6 +30,7 @@ interface InDebtInfo {
     due: string|null,
     amount: number,
 }
+let interval:any = null
 
 export interface UserInfo {
     firstName: string,
@@ -47,7 +48,11 @@ const HomePage: React.FC = (props:any) => {
     const [debtList, setDebtList] = useState<InDebtInfo[]>([])
     const [userInfo, setUserInfo] = useState<UserInfo>()
 
-    const fetchData = () => {
+    const history = useHistory()
+    const [selected, setSelected] = useState<string>('bill')
+    
+
+    const fetchBills = () => {
         axios({
             url: API_URL+"/owned_bills",
             method: "get",
@@ -59,24 +64,56 @@ const HomePage: React.FC = (props:any) => {
                 setBillList(response.data) 
 
         }).catch((e)=>console.log(e));
-
-      axios({
-        url: API_URL+"/unarchived_debts",
-        method: "get",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((response) => {
-            // console.log("debts: ",response); 
-            setDebtList(response.data) 
-      }).catch((e)=>console.log(e));
-
-
-      
+    }
+    const fetchDebts = () => {
+        axios({
+            url: API_URL+"/unarchived_debts",
+            method: "get",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then((response) => {
+                setDebtList(response.data) 
+          }).catch((e)=>console.log(e));
     }
 
 
+    const restartInterval = (func:Function) => {
+        func()
+        clearInterval(interval)
+        interval = setInterval(() =>{  
+            if(history.location.pathname ==="/home") {
+                func()
+            }
+        }, 2000)
+    }
+
+    const handleDebtUpdate = (e:any) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const bid = e.target.getAttribute("debtor-id")
+        const status = e.target.getAttribute("debtor-status")
+
+        console.log(bid)
+        console.log(debtList)
+        axios({
+            url: API_URL + `/debts/${bid}`,
+            method: "PUT",
+            data: {status:Number(status)}
+        }).then(showDebt).catch(showDebt)
+    }
+
+
+
     useEffect(() => {
+
+        fetchBills()
+        fetchDebts()
+        restartInterval(fetchBills)
+        console.log("页面挂载",interval)
+        
+
         UserSevice.getUserBasicInfo()
         .then((response) => {
             console.log(response.data);
@@ -84,25 +121,19 @@ const HomePage: React.FC = (props:any) => {
           }).catch((e) => {
               console.log(e)
           })
-        fetchData()
-        const interval = setInterval(() =>{       
-            fetchData();
-        }, 2000)
-        return ()=>clearInterval(interval); 
+
+        return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
+
     },[])
-
-    // console.log("rendered")
-    const history = useHistory()
-
-    const [selected, setSelected] = useState<string>('bill')
-
 
     const showBill = () => {
         setSelected("bill")
+        restartInterval(fetchBills)
     }
 
     const showDebt = () => {
         setSelected("indebt")
+        restartInterval(fetchDebts)
     }
     return (        
         <IonPage >
@@ -134,8 +165,7 @@ const HomePage: React.FC = (props:any) => {
                                 <p style={textAlignCenter}>{billInfo.debtorPaidNum}</p>
                                 <IonNote slot="end">
                                     <DueChipComponent due={billInfo.due}/>
-                                </IonNote>
-                                
+                                </IonNote>                                
                             </IonItem>
                         </IonItemSliding>
                     )): debtList.map((inDebtInfo:InDebtInfo) =>  (
@@ -144,12 +174,13 @@ const HomePage: React.FC = (props:any) => {
                             <IonItemOptions side="end">
                                 <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
                             </IonItemOptions>
-                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`}>
+                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`} >
                                 <IonLabel >Owe ${inDebtInfo.amount} to {inDebtInfo.oname}</IonLabel>
                                 <IonNote slot="end">
                                     <DueChipComponent due={inDebtInfo.due}/>
                                 </IonNote>
-                                
+                                <IonButton debtor-id = {inDebtInfo.bid} debtor-status={inDebtInfo.status} 
+                                 slot="end" onClick={(e)=>handleDebtUpdate(e)}>Update info</IonButton>
                             </IonItem>
                         </IonItemSliding>
                     ))}
@@ -158,7 +189,7 @@ const HomePage: React.FC = (props:any) => {
 
 
             <IonFab vertical="center" horizontal="start" slot="fixed">
-                <IonFabButton onClick={e=>history.push('./create_bill')}>
+                <IonFabButton onClick={e=>history.push("./create_bill")}>
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>

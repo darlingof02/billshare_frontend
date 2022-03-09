@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import { IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonNote, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
-import {search,menu, ellipsisHorizontal, ellipsisVertical, add, calendar } from 'ionicons/icons';
+import { add } from 'ionicons/icons';
 import {createBrowserHistory} from "history"
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -40,7 +40,7 @@ export interface UserInfo {
     tel: number,
     avatar: string|null,
     uid: number,
-  }
+}
 
 const HomePage: React.FC = (props:any) => {
 
@@ -143,7 +143,7 @@ const HomePage: React.FC = (props:any) => {
                 <IonButtons slot="start">
                     <IonMenuButton />
                 </IonButtons>
-                <IonTitle>HomePageTest</IonTitle>
+                <IonTitle>HomePage</IonTitle>
             </IonToolbar>
 
             <IonSegment value={selected}>

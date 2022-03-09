@@ -61,7 +61,10 @@ const App: React.FC = () => (
         <Route path='/profile/:email' exact component={ProfilePage}>
         </Route>
         <Route path='/bills/:billId'>
-          <BillDetailPage/>
+          <BillDetailPage role="owner"/>
+        </Route>
+        <Route path='/debts/:billId/:status'>
+          <BillDetailPage role="debtor"/>
         </Route>
         <Route path='/test'>
           <ManangeBillButtonComponent bid={92}/>

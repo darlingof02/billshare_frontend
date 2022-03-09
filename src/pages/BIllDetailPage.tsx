@@ -1,8 +1,10 @@
-import { IonAvatar, IonButton, IonContent, IonHeader, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
+import { IonAvatar, IonButton, IonContent, IonFooter, IonHeader, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
 import { CSSProperties, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import BillService from "../api/BillService";
 import BillComponent from "../components/BillComponent";
+import DebtorUpdateStatusButton from "../components/DebtorUpdateStatusButton";
+import DebtStatusComponent from "../components/DebtStatusComponent";
 import {UpdateDebtStatusButton} from "../components/OwnerUpdateStatusButton"
 
 export interface BillDetails {
@@ -38,26 +40,41 @@ const textAlignCenter: CSSProperties = {
 
 
 
-const BillDetailPage: React.FC = (props) => {
+const BillDetailPage = (props:{role: string|null}) => {
 
     const [billDetails, setBillDetail] = useState<BillDetails>();
     const [indebts, setIndebts] = useState<Debt[]>([])
-    const { billId } = useParams() as {
+    const { billId, status } = useParams() as {
         billId: any
+        status: any
     }
     const history = useHistory()
-    console.log(history.location.pathname)
-    console.log(history.location.pathname.substring(history.location.pathname.lastIndexOf("/")+1))
+    // console.log(history.location.pathname)
+    // console.log(history.location.pathname.substring(history.location.pathname.lastIndexOf("/")+1))
+    // console.log("bid: " + billId)
+    // console.log("status: " + status)
     const bid = Number(history.location.pathname.substring(history.location.pathname.lastIndexOf("/")+1))
     const fetchData = () => {
         console.log("fetched data")
-        BillService.getIndebtByBill(billId)
-        .then(
-            (response) => {
-                console.log(response.data)
-                setIndebts(response.data)
-            }
-        )
+        if (props.role === 'owner') {
+            BillService.getIndebtByBill(billId)
+            .then(
+                (response) => {
+                    console.log(response.data)
+                    setIndebts(response.data)
+                }
+            )
+        }
+
+        if (props.role === 'debtor') {
+            BillService.getIndebtByBillForDebtor(billId)
+            .then(
+                (response) => {
+                    console.log(response.data)
+                    setIndebts(response.data)
+                }
+            )
+        }
 
         BillService.getBillById(billId)
         .then(
@@ -78,8 +95,10 @@ const BillDetailPage: React.FC = (props) => {
                     This is Bill {billId}
                 </IonToolbar>
             </IonHeader>
+            
             <IonContent>
                 {billDetails ? <BillComponent billInfo={billDetails}/> : null}
+                {props.role === 'debtor' ? <DebtStatusComponent status={status}/> : null}
                 <IonListHeader>
                     Indebtors
                 </IonListHeader>
@@ -92,15 +111,25 @@ const BillDetailPage: React.FC = (props) => {
                             <IonAvatar slot="start">
                                 <IonImg src={String(item.debtorAvatar)} />
                             </IonAvatar>
-                            <IonLabel>{item.debtorNickName} Owes You </IonLabel>
-                            <IonLabel>${item.amount}</IonLabel>
+
+                            <IonLabel>{item.debtorNickName} Owes {props.role === 'owner' ? "You" : ( billDetails === undefined ? null: billDetails.ownerNickName)} ${item.amount}</IonLabel>
                             <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} 
                             dname={item.debtorNickName} refresh={(data:Debt[]) => setIndebts(data)} ></UpdateDebtStatusButton>
+
+
 
                         </IonItem>
                     </IonItemSliding>
                 ))}
             </IonContent>
+            {props.role === 'debtor' ? 
+                (
+                    <IonFooter>
+
+                        <DebtorUpdateStatusButton status={status} bid={billId} /> 
+
+                    </IonFooter>
+                ) : null }
         </IonPage>
     );
 }

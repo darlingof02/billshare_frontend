@@ -36,7 +36,7 @@ const BillComponent = (props:{billInfo:BillDetails}) => {
                 <IonCardContent>{props.billInfo.comment}</IonCardContent>}
 
             {props.billInfo.type == null || props.billInfo.type?.length==0? null:
-                <IonChip><IonCardHeader>Type: {props.billInfo.type}</IonCardHeader></IonChip>}
+                < IonChip><IonCardHeader>Type: {props.billInfo.type}</IonCardHeader></IonChip>}
             
             <IonCardHeader>
                 Due: <DueChipComponent due={props.billInfo.due}/>

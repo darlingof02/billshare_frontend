@@ -1,7 +1,7 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
+import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
-import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
-import React, { CSSProperties, useEffect, useState } from "react";
+import { removeCircle, calendar } from 'ionicons/icons';
+import React, { CSSProperties, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL, CHECK_USER, CREATE_BILL} from "../api/constant";
 import './CreateBillPage.css' 

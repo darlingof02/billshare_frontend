@@ -1,10 +1,10 @@
 import React from 'react';
-import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonRouterOutlet, IonAvatar, IonLabel, IonRow, IonCol, IonIcon, IonButton, IonFooter, IonImg, IonNote } from '@ionic/react';
+import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonRouterOutlet, IonAvatar, IonLabel, IonRow, IonCol, IonIcon, IonButton, IonFooter, IonImg } from '@ionic/react';
 import './MenuComponent.css'
 import { notifications, person, reader, settings } from 'ionicons/icons';
 import Authentication from '../api/Authentication';
-import { useLocalStorage } from '../api/MyHooks';
-import { Redirect, useHistory } from 'react-router';
+// import { useLocalStorage } from '../api/MyHooks';
+import { useHistory } from 'react-router';
 import { UserInfo } from "../pages/HomePage";
 
 
@@ -17,9 +17,6 @@ const MenuComponent = (props:{userInfo: UserInfo|undefined}) => {
     Authentication.logout();
     history.replace('/login')
   }
-
-
-
 
   return (
   <>
@@ -37,7 +34,8 @@ const MenuComponent = (props:{userInfo: UserInfo|undefined}) => {
                 </IonAvatar>
             </IonCol>
             <IonCol size='8' style={{padding: 40}}>
-                {props.userInfo == undefined ? null : props.userInfo.nickName}
+                {/* {typeof(props.userInfo) === undefined ? null : props.userInfo?.nickName} */}
+                {props.userInfo?.nickName}
             </IonCol>
 
         </IonRow>
@@ -66,7 +64,7 @@ const MenuComponent = (props:{userInfo: UserInfo|undefined}) => {
         
       </IonContent>
       <IonFooter>
-          <IonButton expand='block' onClick={logout}>Logout</IonButton>
+          <IonButton className='logout-button' onClick={logout}>Logout</IonButton>
         </IonFooter>
     </IonMenu>
 

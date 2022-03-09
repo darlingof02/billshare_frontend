@@ -1,25 +1,25 @@
-import { IonChip, IonHeader, IonItem, IonLabel, IonList, IonNote, IonProgressBar } from "@ionic/react"
+import { IonHeader, IonLabel, IonList, IonNote, IonProgressBar } from "@ionic/react"
 
 let getChipStatus = (st: number) => {
-    if (st == -1) {
+    if (st === -1) {
         return {color: "dark", statusName: "declined"};
     }
-    else if (st == 0) {
+    else if (st === 0) {
         return {color: "medium", statusName: "unaccept"};
     }
-    else if (st == 1) {
+    else if (st === 1) {
         return {
             color: "warning",
             statusName: "unpaid"
         }
     }
-    else if (st == 2) {
+    else if (st === 2) {
         return {
             color: "secondary",
             statusName: "checking",
         }
     }
-    else if (st == 3) {
+    else if (st === 3) {
         return {
             color: "success",
             statusName: "paid"
@@ -38,7 +38,7 @@ const DebtStatusComponent = (props : {status: number}) => {
     return (
         <>
             {
-                props.status == -1 ?
+                props.status === -1 ?
                 <IonNote>
                     <IonProgressBar color={color}></IonProgressBar>
                     <IonList>

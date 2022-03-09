@@ -1,8 +1,7 @@
 import axios from "axios";
 
-import { IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonNote, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButtons, IonContent, IonFab, IonFabButton, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenuButton, IonNote, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import { add } from 'ionicons/icons';
-import {createBrowserHistory} from "history"
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
@@ -10,7 +9,6 @@ import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
 import UserSevice from "../api/UserService"
-import DebtorUpdateStatusButton from '../components/DebtorUpdateStatusButton'
 
 interface OwnedBillInfo {
     bid: number,
@@ -89,21 +87,21 @@ const HomePage: React.FC = (props:any) => {
         }, 2000)
     }
 
-    const handleDebtUpdate = (e:any) => {
-        e.preventDefault()
-        e.stopPropagation()
+    // const handleDebtUpdate = (e:any) => {
+    //     e.preventDefault()
+    //     e.stopPropagation()
 
-        const bid = e.target.getAttribute("debtor-id")
-        const status = e.target.getAttribute("debtor-status")
+    //     const bid = e.target.getAttribute("debtor-id")
+    //     const status = e.target.getAttribute("debtor-status")
 
-        console.log(bid)
-        console.log(debtList)
-        axios({
-            url: API_URL + `/debts/${bid}`,
-            method: "PUT",
-            data: {status:Number(status)}
-        }).then(showDebt).catch(showDebt)
-    }
+    //     console.log(bid)
+    //     console.log(debtList)
+    //     axios({
+    //         url: API_URL + `/debts/${bid}`,
+    //         method: "PUT",
+    //         data: {status:Number(status)}
+    //     }).then(showDebt).catch(showDebt)
+    // }
 
 
 
@@ -125,6 +123,7 @@ const HomePage: React.FC = (props:any) => {
 
         return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     const showBill = () => {
@@ -155,7 +154,7 @@ const HomePage: React.FC = (props:any) => {
 
             <IonContent>
                 <IonList> 
-                    {selected == "bill" ? billList.map((billInfo) =>  (
+                    {selected === "bill" ? billList.map((billInfo) =>  (
 
                         <IonItemSliding key={billInfo.bid}>
                             <IonItemOptions side="end">
@@ -195,11 +194,12 @@ const HomePage: React.FC = (props:any) => {
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>
-            <IonFab vertical="bottom" horizontal="start" slot="fixed">
+
+            {/* <IonFab vertical="bottom" horizontal="start" slot="fixed">
                 <IonFabButton color="danger" onClick={e=>{history.push('./test');}}>
                     <IonIcon icon={add} />
                 </IonFabButton>
-            </IonFab>
+            </IonFab> */}
 
  
         </IonPage>

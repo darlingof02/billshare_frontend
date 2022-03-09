@@ -4,3 +4,7 @@
     max-width: 80px !important;  
     max-height: 80px !important; 
 }
+.logout-button {
+    margin: 3% 3%;
+    width: 94%;
+}

@@ -1,7 +1,6 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage';
@@ -29,8 +28,6 @@ import './theme/variables.css';
 
 
 import CreateBillPage from './pages/CreateBillPage';
-import TestPage from './pages/TestPage';
-import ManangeBillButtonComponent from './pages/TestPage';
 import BillDetailPage from './pages/BillDetailPage'
 import ProfilePage from './pages/ProfilePage';
 
@@ -66,9 +63,9 @@ const App: React.FC = () => (
         <Route path='/debts/:billId/:status'>
           <BillDetailPage role="debtor"/>
         </Route>
-        <Route path='/test'>
+        {/* <Route path='/test'>
           <ManangeBillButtonComponent bid={92}/>
-        </Route>
+        </Route> */}
 
       </IonRouterOutlet>
     </IonReactRouter>

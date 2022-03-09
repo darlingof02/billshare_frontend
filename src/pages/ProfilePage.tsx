@@ -1,12 +1,11 @@
-import { InputChangeEventDetail, IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonNote, IonPage, IonRow, IonTitle, IonToast, IonToolbar, useIonModal } from "@ionic/react"
-import { createOutline, settingsSharp } from 'ionicons/icons';
-import { CSSProperties, useEffect, useState } from "react";
+import { IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonNote, IonPage, IonTitle, IonToolbar, useIonModal } from "@ionic/react"
+import { createOutline } from 'ionicons/icons';
+import { useEffect, useState } from "react";
 import { UserInfo } from "./HomePage"
 import UserSevice from "../api/UserService"
 import "./ProfilePage.css"
 import axios from "axios";
 import { API_URL } from "../api/constant";
-import { dismiss } from "@ionic/core/dist/types/utils/overlays";
 
 
 /**

@@ -1,18 +1,17 @@
-import { IonButton, IonChip, IonCol, IonLabel, IonRow, useIonAlert } from "@ionic/react";
-import DebtService from "../api/DebtService";
+import { IonCol, IonRow, useIonAlert } from "@ionic/react";
 import DebtorDeclineButton from './DebtorDeclineButton'
 import DebtorAcceptButton from './DebtorAcceptButton'
 import DebtorPayButton from "./DebtorPayButton";
 
-interface DebtStatus {
-    status: number,
-    bid: number,
-}
+// interface DebtStatus {
+//     status: number,
+//     bid: number,
+// }
 
 
 
 const DebtorUpdateStatusButton = (props:{status: number, bid: number}) => {
-    let [present] = useIonAlert();
+    // let [present] = useIonAlert();
     console.log("status: " + props.status)
     console.log("bid: " + props.bid)
     

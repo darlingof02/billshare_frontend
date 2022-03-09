@@ -1,8 +1,7 @@
 import axios from "axios";
 
-import { IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonNote, IonPage, IonRouterOutlet, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButtons, IonContent, IonFab, IonFabButton, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonMenuButton, IonNote, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from "@ionic/react";
 import { add } from 'ionicons/icons';
-import {createBrowserHistory} from "history"
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { API_URL } from "../api/constant";
@@ -195,11 +194,12 @@ const HomePage: React.FC = (props:any) => {
                     <IonIcon icon={add} />
                 </IonFabButton>
             </IonFab>
-            <IonFab vertical="bottom" horizontal="start" slot="fixed">
+            
+            {/* <IonFab vertical="bottom" horizontal="start" slot="fixed">
                 <IonFabButton color="danger" onClick={e=>{history.push('./test');}}>
                     <IonIcon icon={add} />
                 </IonFabButton>
-            </IonFab>
+            </IonFab> */}
 
  
         </IonPage>

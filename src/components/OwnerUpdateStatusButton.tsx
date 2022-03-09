@@ -39,7 +39,7 @@ interface DebtInfo {
  *  2. confirm                  success         able
  *  3. settled                  success
 */
-const getButtonAttr = (debtStatus: number) => {
+const getButtonAttr = (debtStatus: number, role:string|null) => {
     switch(debtStatus){
         case -1:
             return {color:"dark", disabled:true, text: "declined"}
@@ -48,15 +48,17 @@ const getButtonAttr = (debtStatus: number) => {
         case 1:
             return {color:"danger", disabled:true, text: "unpaid"}
         case 2:
-            return {color:"primary", disabled:false, text: "confirm"}
+            if(role === "owner")
+                return {color:"primary", disabled:false, text: "confirm"}
+            return {color:"success", disabled: true, text: "paid"}
         case 3:
             return {color:"success", disabled:true, text: "settled"}
     }
     return {color:"primary", disabled:true, text: "undefined"}
 }
 
-export const UpdateDebtStatusButton = (props:{debtStatus:number, bid: number, did:number, dname:string, refresh:Function}) => {
-    const buttonAttr = getButtonAttr(props.debtStatus)
+export const UpdateDebtStatusButton = (props:{debtStatus:number, bid: number, did:number, dname:string, refresh:Function, role:string|null}) => {
+    const buttonAttr = getButtonAttr(props.debtStatus,props.role)
     const [present] = useIonAlert();
     const confirmPayment = () => {
         present({

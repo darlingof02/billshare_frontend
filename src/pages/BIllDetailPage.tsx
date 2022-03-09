@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonContent, IonFooter, IonHeader, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
+import { IonAvatar, IonContent, IonFooter, IonHeader, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonListHeader, IonPage, IonToolbar } from "@ionic/react";
 import { CSSProperties, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import BillService from "../api/BillService";
@@ -113,7 +113,7 @@ const BillDetailPage = (props:{role: string|null}) => {
                             </IonAvatar>
 
                             <IonLabel>{item.debtorNickName} Owes {props.role === 'owner' ? "You" : ( billDetails === undefined ? null: billDetails.ownerNickName)} ${item.amount}</IonLabel>
-                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} 
+                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} role={props.role}
                             dname={item.debtorNickName} refresh={(data:Debt[]) => setIndebts(data)} ></UpdateDebtStatusButton>
 
 

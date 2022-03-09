@@ -1,4 +1,4 @@
-import { IonChip, IonHeader, IonItem, IonLabel, IonList, IonNote, IonProgressBar } from "@ionic/react"
+import { IonHeader, IonLabel, IonList, IonNote, IonProgressBar } from "@ionic/react"
 
 let getChipStatus = (st: number) => {
     if (st == -1) {

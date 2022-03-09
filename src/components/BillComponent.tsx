@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonImg, IonLabel } from "@ionic/react";
+import { IonCard, IonCardContent, IonCardHeader, IonChip, IonImg } from "@ionic/react";
 import { BillDetails } from "../pages/BillDetailPage";
 import { DueChipComponent } from "./DueChipComponent";
 
@@ -11,16 +11,6 @@ export const calcDaysBeforeDue = (date:Date, due:Date|string):number => {
 }
 
 const BillComponent = (props:{billInfo:BillDetails}) => {
-
-    const DueColor = (due:string | null) => {
-        if(due == null)
-            return "success"
-        if(calcDaysBeforeDue(new Date(),due) < 1)
-            return "danger"
-        if(calcDaysBeforeDue(new Date(),due) < 7)
-            return "warning"
-        return "success"
-    }
 
     return (
         <IonCard>

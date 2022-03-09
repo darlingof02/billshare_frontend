@@ -10,6 +10,7 @@ import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
 import UserSevice from "../api/UserService"
+import DebtorUpdateStatusButton from '../components/DebtorUpdateStatusButton'
 
 interface OwnedBillInfo {
     bid: number,
@@ -174,13 +175,14 @@ const HomePage: React.FC = (props:any) => {
                             <IonItemOptions side="end">
                                 <IonItemOption color="danger" onClick={() => console.log('Delete')}>Delete</IonItemOption>
                             </IonItemOptions>
-                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}`} >
+                            <IonItem key={inDebtInfo.bid} routerLink={`/debts/${inDebtInfo.bid}/${inDebtInfo.status}`} >
                                 <IonLabel >Owe ${inDebtInfo.amount} to {inDebtInfo.oname}</IonLabel>
                                 <IonNote slot="end">
                                     <DueChipComponent due={inDebtInfo.due}/>
                                 </IonNote>
-                                <IonButton debtor-id = {inDebtInfo.bid} debtor-status={inDebtInfo.status} 
-                                 slot="end" onClick={(e)=>handleDebtUpdate(e)}>Update info</IonButton>
+                                {/* <IonButton debtor-id = {inDebtInfo.bid} debtor-status={inDebtInfo.status} 
+                                 slot="end" onClick={(e)=>handleDebtUpdate(e)}>Update info</IonButton> */}
+                                 {/* <DebtorUpdateStatusButton status={inDebtInfo.status} bid={inDebtInfo.bid}/> */}
                             </IonItem>
                         </IonItemSliding>
                     ))}

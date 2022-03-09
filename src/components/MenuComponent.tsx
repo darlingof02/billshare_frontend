@@ -15,7 +15,7 @@ const MenuComponent = (props:{userInfo: UserInfo|undefined}) => {
   let history = useHistory();
   const logout = () => {
     Authentication.logout();
-    history.push('/login')
+    history.replace('/login')
   }
 
 

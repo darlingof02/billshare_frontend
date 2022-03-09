@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonSegment, IonSegmentButton, IonTextarea, IonTitle, IonToast, IonToolbar, useIonAlert } from "@ionic/react";
 import axios from "axios";
 import {search,menu, ellipsisHorizontal, ellipsisVertical, removeCircle, calendar } from 'ionicons/icons';
 import React, { CSSProperties, useEffect, useState } from "react";
@@ -220,25 +220,14 @@ const CreateBillPage: React.FC = (props:any) => {
 
     return (
         <IonPage>
-            <IonToolbar>
-                <IonButtons slot="secondary">
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={menu} />
-                    </IonButton>
-                    <IonButton >
-                        <IonIcon slot="icon-only" icon={search} />
-                    </IonButton>
-                </IonButtons>
-                <IonButtons slot="primary">
-                    <IonButton>
-                        <IonIcon slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
-                    </IonButton>
-                </IonButtons>
-                <IonTitle>New Bill</IonTitle>
-            </IonToolbar>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>New Bill</IonTitle>
+                </IonToolbar>
+            </IonHeader>
             <IonContent>
             <IonItem lines="inset">
-                <IonLabel slot="" position="floating">Total Amount</IonLabel>
+                <IonLabel position="floating">Total Amount</IonLabel>
                 <IonInput type='tel' onIonChange={(event) => {splitAmountMap(Number(event.detail.value))}}></IonInput>
                 
             </IonItem>

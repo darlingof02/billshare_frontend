@@ -91,8 +91,9 @@ const BillDetailPage: React.FC = (props) => {
                             <IonAvatar slot="start">
                                 <IonImg src={String(item.debtorAvatar)} />
                             </IonAvatar>
-                            <IonLabel>{item.debtorNickName} Owes You ${item.amount}</IonLabel>
-                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} refresh={fetchData}></UpdateDebtStatusButton>
+                            <IonLabel>{item.debtorNickName} Owes You </IonLabel>
+                            <IonLabel>${item.amount}</IonLabel>
+                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} dname={item.debtorNickName} refresh={fetchData} ></UpdateDebtStatusButton>
 
                         </IonItem>
                     </IonItemSliding>

@@ -32,6 +32,7 @@ import CreateBillPage from './pages/CreateBillPage';
 import TestPage from './pages/TestPage';
 import ManangeBillButtonComponent from './pages/TestPage';
 import BillDetailPage from './pages/BillDetailPage'
+import ProfilePage from './pages/ProfilePage';
 
 
 
@@ -56,6 +57,8 @@ const App: React.FC = () => (
         </Route>
         <Route path='/create_bill' exact component={CreateBillPage}>
           {/* <CreateBillPage /> */}
+        </Route>
+        <Route path='/profile/:email' exact component={ProfilePage}>
         </Route>
         <Route path='/bills/:billId'>
           <BillDetailPage/>

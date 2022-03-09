@@ -1,6 +1,7 @@
-import { IonButton } from "@ionic/react"
+import { IonButton, IonIcon, useIonAlert } from "@ionic/react"
 import axios from "axios"
 import { API_URL } from "../api/constant"
+import { checkmarkCircleOutline} from 'ionicons/icons';
 
 /**
  * status in bill: 
@@ -54,20 +55,24 @@ const getButtonAttr = (debtStatus: number) => {
     return {color:"primary", disabled:true, text: "undefined"}
 }
 
-
-// implement debtors' first
-
-export const UpdateDebtStatusButton = (props:{debtStatus:number, bid: number, did:number, refresh:Function}) => {
+export const UpdateDebtStatusButton = (props:{debtStatus:number, bid: number, did:number, dname:string, refresh:Function}) => {
     const buttonAttr = getButtonAttr(props.debtStatus)
+    const [present] = useIonAlert();
     const confirmPayment = () => {
-        axios({
-            url: API_URL+`/bills/${props.bid}/${props.did}`,
-            method:"PUT",
-        }).then(props.refresh())
-        .catch(()=>{console.log("更新失败")})
+        present({
+            cssClass: 'my-css',
+            header: 'Confirm Payment',
+            message: `Did you recieve the payment from ${props.dname}?`,
+            buttons: [
+              'Cancel',
+              { text: 'Confirm', handler: (d) => axios({
+                    url: API_URL+`/bills/${props.bid}/${props.did}`,
+                    method:"PUT",
+                }).then(props.refresh()).catch(()=>{console.log("更新失败")})
+            }],
+            onDidDismiss: (e) => console.log('did dismiss'),
+        })
     }
-
-
-    return (<IonButton slot="end" color={buttonAttr.color} disabled ={buttonAttr.disabled}
-            onClick={confirmPayment}>{buttonAttr.text}</IonButton>)
+    return (<IonButton fill={buttonAttr.disabled?"outline":"solid"} slot="end" color={buttonAttr.color} disabled ={buttonAttr.disabled}
+            onClick={confirmPayment}>{buttonAttr.text}{props.debtStatus==3 && <IonIcon icon={checkmarkCircleOutline}/>}</IonButton>)
 }

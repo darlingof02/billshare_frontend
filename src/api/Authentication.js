@@ -5,6 +5,8 @@ import { API_URL } from './constant'
 
 class Authentication {
 
+    authInterceptor = null;
+
     register(userInfo) {
         console.log(userInfo)
         return axios({
@@ -30,11 +32,12 @@ class Authentication {
 
     logout() {
         localStorage.removeItem('localEmail')
+        axios.interceptors.request.eject(this.authInterceptor);
     }
 
     setupAxiosIntercetors(AuthHeader){
 
-        axios.interceptors.request.use(
+        this.authInterceptor = axios.interceptors.request.use(
             (config) => {
                 if(this.isUserLogin())
                     config.headers.authorization = AuthHeader

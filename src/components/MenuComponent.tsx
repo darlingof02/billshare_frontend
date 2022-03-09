@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonRouterOutlet, IonAvatar, IonLabel, IonRow, IonCol, IonIcon, IonButton, IonFooter, IonImg } from '@ionic/react';
+import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonRouterOutlet, IonAvatar, IonLabel, IonRow, IonCol, IonIcon, IonButton, IonFooter, IonImg, IonNote } from '@ionic/react';
 import './MenuComponent.css'
 import { notifications, person, reader, settings } from 'ionicons/icons';
 import Authentication from '../api/Authentication';
@@ -31,12 +31,12 @@ const MenuComponent = (props:{userInfo: UserInfo|undefined}) => {
       </IonHeader>
       <IonContent className='ion-padding'>
         <IonRow className="vertical-align-content" style={{height: "18%"}}>
-            <IonCol size='6'>
+            <IonCol size='4'>
                 <IonAvatar className='item-avatar'>
                     <IonImg src="https://source.unsplash.com/gySMaocSdqs/600x300" alt="cat" />
                 </IonAvatar>
             </IonCol>
-            <IonCol size='6' style={{padding: 40}}>
+            <IonCol size='8' style={{padding: 40}}>
                 {props.userInfo == undefined ? null : props.userInfo.nickName}
             </IonCol>
 

@@ -68,7 +68,7 @@ export const UpdateDebtStatusButton = (props:{debtStatus:number, bid: number, di
               { text: 'Confirm', handler: (d) => axios({
                     url: API_URL+`/bills/${props.bid}/${props.did}`,
                     method:"PUT",
-                }).then(props.refresh()).catch(()=>{console.log("更新失败")})
+                }).then((response)=>props.refresh(response.data)).catch(()=>{console.log("更新失败")})
             }],
             onDidDismiss: (e) => console.log('did dismiss'),
         })

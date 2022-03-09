@@ -16,6 +16,12 @@ class BillService {
         )
     }
 
+    getIndebtByBillForDebtor(id) {
+        return axios.get(
+            `${API_URL}/debts/${id}`,
+        )
+    }
+
     getBillById(id) {
         return axios.get(
             `${API_URL}/bills/${id}`,

@@ -68,6 +68,7 @@ const BillDetailPage: React.FC = (props) => {
         )
     }
 
+
     useEffect(fetchData,[])
 
     return (
@@ -93,7 +94,7 @@ const BillDetailPage: React.FC = (props) => {
                             </IonAvatar>
                             <IonLabel>{item.debtorNickName} Owes You </IonLabel>
                             <IonLabel>${item.amount}</IonLabel>
-                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} dname={item.debtorNickName} refresh={fetchData} ></UpdateDebtStatusButton>
+                            <UpdateDebtStatusButton debtStatus={item.status} bid={bid} did={item.debtorId} dname={item.debtorNickName} refresh={(data:any) => setBillDetail(data)} ></UpdateDebtStatusButton>
 
                         </IonItem>
                     </IonItemSliding>

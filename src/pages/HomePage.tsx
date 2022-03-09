@@ -136,7 +136,7 @@ const HomePage: React.FC = (props:any) => {
         restartInterval(fetchDebts)
     }
     return (        
-        <IonPage >
+        <IonPage id="homepage">
 
             <MenuComponent userInfo={userInfo}/>
             <IonToolbar>

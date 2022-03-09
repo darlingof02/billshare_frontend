@@ -12,6 +12,7 @@ const LoginPage: React.FC = (props:any) => {
     const [password, setPassword] = useState('');
     const [isIncorrect, setIncorrect] = useState(false)
     // const naviagte = useNavigate();
+    // eslint-disable-next-line
     let [localEmail, setLocalEmail] = useLocalStorage('localEmail', '')
     let history = useHistory();
 
@@ -62,4 +63,8 @@ const LoginPage: React.FC = (props:any) => {
 };
 
 export default LoginPage;
+
+// function useNavigate() {
+//     throw new Error('Function not implemented.');
+// }
 

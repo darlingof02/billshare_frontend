@@ -3,33 +3,10 @@ import axios from "axios"
 import { API_URL } from "../api/constant"
 import { checkmarkCircleOutline} from 'ionicons/icons';
 
-/**
- * status in bill: 
- * -1. declined                 dark
- *  0. unaccepted               medium
- *  1. unpaid                   danger
- *  2. confirm                  success         able
- *  3. settled                  success
- * 
- * status in debt:
- * -1. declined                 medium
- *  0. accept/decline           success/danger  able
- *  1. pay                      primary         able
- *  2. unconfirmed              success
- *  3. settled                  success
- * 
- * status in other debt:
- * -1. declined     light
- *  0. unaccepted   medium
- *  1. unpaid       danger
- *  2. paid         primary
- *  3. settled      success
- */
-
-interface DebtInfo {
-    debtStatus: number,
-    role: string,
-} 
+// interface DebtInfo {
+//     debtStatus: number,
+//     role: string,
+// } 
 
 /* status in debt:
  * status in bill: 
@@ -76,5 +53,5 @@ export const UpdateDebtStatusButton = (props:{debtStatus:number, bid: number, di
         })
     }
     return (<IonButton fill={buttonAttr.disabled?"outline":"solid"} slot="end" color={buttonAttr.color} disabled ={buttonAttr.disabled}
-            onClick={confirmPayment}>{buttonAttr.text}{props.debtStatus==3 && <IonIcon icon={checkmarkCircleOutline}/>}</IonButton>)
+            onClick={confirmPayment}>{buttonAttr.text}{props.debtStatus===3 && <IonIcon icon={checkmarkCircleOutline}/>}</IonButton>)
 }

@@ -24,7 +24,7 @@ const SignUpPage: React.FC = () => {
     const signup = (userInfo:Object) => {
         Authentication.register(userInfo)
         .then((response) => {
-            if(response.status == 200)
+            if(response.status === 200)
                 history.push('/login')
             else{
                 setErrorMessage(response.data)

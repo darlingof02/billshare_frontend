@@ -19,13 +19,13 @@ const BillComponent = (props:{billInfo:BillDetails}) => {
                 Bill owner: <IonChip>{props.billInfo.ownerNickName}</IonChip>
             </IonCardHeader>
 
-            {props.billInfo.comment == null || props.billInfo.comment?.length == 0? null : 
+            {props.billInfo.comment == null || props.billInfo.comment?.length === 0? null : 
                 <IonCardHeader >Comment:</IonCardHeader>}
 
-            {props.billInfo.comment == null || props.billInfo.comment?.length == 0? null : 
+            {props.billInfo.comment == null || props.billInfo.comment?.length === 0? null : 
                 <IonCardContent>{props.billInfo.comment}</IonCardContent>}
 
-            {props.billInfo.type == null || props.billInfo.type?.length==0? null:
+            {props.billInfo.type == null || props.billInfo.type?.length===0? null:
                 < IonChip><IonCardHeader>Type: {props.billInfo.type}</IonCardHeader></IonChip>}
             
             <IonCardHeader>

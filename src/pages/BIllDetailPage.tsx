@@ -85,7 +85,7 @@ const BillDetailPage = (props:{role: string|null}) => {
         )
     }
 
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(fetchData,[])
 
     return (

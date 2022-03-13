@@ -1,6 +1,8 @@
 # billshare_frontend
 Front-end application of BillShare, built in Ionic-React typescript template
 
+This app allows you to easily manage your shared bills and debts owed to others.
+
 See BillShare back-end [here](https://github.com/darlingof02/BillShare)
 
 ## Features:
@@ -20,4 +22,8 @@ See BillShare back-end [here](https://github.com/darlingof02/BillShare)
     *	confirm payment
   *	show bills info
   *	show payment process in real time
+
+to start this app
+
+
 

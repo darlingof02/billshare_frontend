@@ -23,7 +23,7 @@ See BillShare back-end [here](https://github.com/darlingof02/BillShare)
   *	show bills info
   *	show payment process in real time
 
-to start this app
+## to start this app
 
 first git clone this repo and enter the directory
 

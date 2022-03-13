@@ -25,5 +25,16 @@ See BillShare back-end [here](https://github.com/darlingof02/BillShare)
 
 to start this app
 
+first git clone this repo and enter the directory
+
+install the dependency
+```
+npm install
+```
+start application
+```
+npm start
+```
+then see login page in browse http://localhost:3000/
 
 

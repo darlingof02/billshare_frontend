@@ -13,7 +13,7 @@ const DebtorUpdateStatusButton = (props:{status: number, bid: number}) => {
     console.log("status: " + props.status)
     console.log("bid: " + props.bid)
     
-    if ( props.status === 0) {
+    if ( props.status == 0) {
         return (
             
             <IonRow>
@@ -26,7 +26,7 @@ const DebtorUpdateStatusButton = (props:{status: number, bid: number}) => {
             </IonRow>
         )
     }
-    else if (props.status === 1) {
+    else if (props.status == 1) {
         return (
 
                 <DebtorPayButton status={props.status} bid={props.bid}/>

@@ -121,6 +121,9 @@ const BillDetailPage = (props:{role: string|null}) => {
                         </IonItem>
                     </IonItemSliding>
                 ))}
+
+
+
             </IonContent>
             {props.role === 'debtor' ? 
                 (

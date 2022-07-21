@@ -1,7 +1,7 @@
-
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import { API_URL } from "./constant";
+import PubSub from "pubsub-js";
 
 
 class WebSockClient {
@@ -27,14 +27,14 @@ class WebSockClient {
        });
     
         this.stompClient = Stomp.over(socket);
-        this.stompClient.connect({"Authorization":token}, function (frame) {
+        this.stompClient.connect({"Authorization":token}, (frame) => {
             console.log('Connected: ' + frame);
 
-            this.stompClient.subscribe('/user/topic/private-greetings', (message)=>{console.log("subscribe")})
-            this.stompClient.subscribe('topic/greetings', (message)=>{console.log("message")})
+            this.stompClient.subscribe('/user/topic/private-greetings', (message)=>{console.log("subscribe");PubSub.publish("topic1",message)})
+            this.stompClient.subscribe('topic/greetings', (message)=>{console.log("subscribe");PubSub.publish("topic1",message)})
         });
     }
-    static disconnect = () => {
+    disconnect = () => {
         if (this.stompClient !== null) {
             this.stompClient.disconnect();
             console.log("Disconnected");

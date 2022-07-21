@@ -10,6 +10,7 @@ import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
 import UserSevice from "../api/UserService"
 import WebSockClient from "../api/WebSockClient";
+import PubSub from "pubsub-js"
 
 interface OwnedBillInfo {
     bid: number,
@@ -112,7 +113,10 @@ const HomePage: React.FC = (props:any) => {
         fetchDebts()
         // restartInterval(fetchBills)
         console.log("页面挂载",interval)
-        
+        PubSub.subscribe("topic2",(message, data)=>{
+            console.log("recieved --"+message); 
+            console.log("rec--"+message); 
+            console.log("re:"+data)})
 
         UserSevice.getUserBasicInfo()
         .then((response) => {
@@ -126,19 +130,6 @@ const HomePage: React.FC = (props:any) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
-
-    useEffect(() => {
-
-        fetchBills()
-        fetchDebts()
-        // restartInterval(fetchBills)
-        console.log("news coming")
-
-        return ()=>{console.log("页面end")}; 
-
-    },[WebSockClient.news])
-
-
 
 
 

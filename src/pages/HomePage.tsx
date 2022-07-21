@@ -9,6 +9,7 @@ import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
 import UserSevice from "../api/UserService"
+import WebSockClient from "../api/WebSockClient";
 
 interface OwnedBillInfo {
     bid: number,
@@ -109,7 +110,7 @@ const HomePage: React.FC = (props:any) => {
 
         fetchBills()
         fetchDebts()
-        restartInterval(fetchBills)
+        // restartInterval(fetchBills)
         console.log("页面挂载",interval)
         
 
@@ -125,6 +126,21 @@ const HomePage: React.FC = (props:any) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
+
+    useEffect(() => {
+
+        fetchBills()
+        fetchDebts()
+        // restartInterval(fetchBills)
+        console.log("news coming")
+
+        return ()=>{console.log("页面end")}; 
+
+    },[WebSockClient.news])
+
+
+
+
 
     const showBill = () => {
         setSelected("bill")

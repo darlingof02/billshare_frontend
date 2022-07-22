@@ -29,6 +29,7 @@ class WebSockClient {
         this.stompClient = Stomp.over(socket);
         this.stompClient.connect({"Authorization":token}, (frame) => {
             console.log('Connected: ' + frame);
+            this.stompClient.subscribe('/user/topic/news',(news)=>{PubSub.publish("news", news)})
 
             this.stompClient.subscribe('/user/topic/private-greetings', (message)=>{console.log("subscribe");PubSub.publish("topic1",message)})
             this.stompClient.subscribe('topic/greetings', (message)=>{console.log("subscribe");PubSub.publish("topic1",message)})
@@ -41,6 +42,9 @@ class WebSockClient {
         }
         else
             console.log("No client");
+    }
+    sendMessage = (prefix, destination, header, message) =>{
+        this.stompClient.send(prefix+destination, header, JSON.stringify(message));
     }
 }
 

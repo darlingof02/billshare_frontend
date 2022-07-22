@@ -113,10 +113,11 @@ const HomePage: React.FC = (props:any) => {
         fetchDebts()
         // restartInterval(fetchBills)
         console.log("页面挂载",interval)
-        PubSub.subscribe("topic2",(message, data)=>{
-            console.log("recieved --"+message); 
-            console.log("rec--"+message); 
-            console.log("re:"+data)})
+        PubSub.subscribe("news",(message, data)=>{
+            fetchBills();
+            fetchDebts();
+            console.log("news:"+data)
+        })
 
         UserSevice.getUserBasicInfo()
         .then((response) => {
@@ -126,21 +127,24 @@ const HomePage: React.FC = (props:any) => {
               console.log(e)
           })
 
-        return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
+        return ()=>{
+            console.log("页面卸载",interval);
+            // clearInterval(interval)
+            PubSub.unsubscribe("news");
+        }; 
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
 
 
     const showBill = () => {
         setSelected("bill")
-        restartInterval(fetchBills)
+        // restartInterval(fetchBills)
     }
 
     const showDebt = () => {
         setSelected("indebt")
-        restartInterval(fetchDebts)
+        // restartInterval(fetchDebts)
     }
     return (        
         <IonPage id="homepage">

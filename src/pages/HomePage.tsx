@@ -9,6 +9,8 @@ import MenuComponent from "../components/MenuComponent";
 import { textAlignCenter } from "./CreateBillPage";
 import { DueChipComponent } from "../components/DueChipComponent";
 import UserSevice from "../api/UserService"
+import WebSockClient from "../api/WebSockClient";
+import PubSub from "pubsub-js"
 
 interface OwnedBillInfo {
     bid: number,
@@ -109,9 +111,13 @@ const HomePage: React.FC = (props:any) => {
 
         fetchBills()
         fetchDebts()
-        restartInterval(fetchBills)
+        // restartInterval(fetchBills)
         console.log("页面挂载",interval)
-        
+        PubSub.subscribe("news",(message, data)=>{
+            fetchBills();
+            fetchDebts();
+            console.log("news:"+data)
+        })
 
         UserSevice.getUserBasicInfo()
         .then((response) => {
@@ -121,19 +127,24 @@ const HomePage: React.FC = (props:any) => {
               console.log(e)
           })
 
-        return ()=>{console.log("页面卸载",interval);clearInterval(interval)}; 
+        return ()=>{
+            console.log("页面卸载",interval);
+            // clearInterval(interval)
+            PubSub.unsubscribe("news");
+        }; 
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
+
+
 
     const showBill = () => {
         setSelected("bill")
-        restartInterval(fetchBills)
+        // restartInterval(fetchBills)
     }
 
     const showDebt = () => {
         setSelected("indebt")
-        restartInterval(fetchDebts)
+        // restartInterval(fetchDebts)
     }
     return (        
         <IonPage id="homepage">

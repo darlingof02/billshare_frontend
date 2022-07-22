@@ -1,6 +1,8 @@
 import { getRoles } from '@testing-library/react'
 import axios from 'axios'
+import WebSockClient from './WebSockClient';
 import { API_URL } from './constant'
+import PubSub from 'pubsub-js';
 // export const USER_NAME_SESSION_Attribute_ID
 
 class Authentication {
@@ -33,6 +35,8 @@ class Authentication {
     logout() {
         localStorage.removeItem('localEmail')
         axios.interceptors.request.eject(this.authInterceptor);
+        WebSockClient.disconnect();
+        PubSub.clearAllSubscriptions();
     }
 
     setupAxiosIntercetors(AuthHeader){
@@ -44,6 +48,7 @@ class Authentication {
                 return config
             }
         )
+        WebSockClient.connect(AuthHeader)
     }
 }
 export default new Authentication()

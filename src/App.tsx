@@ -30,7 +30,7 @@ import './theme/variables.css';
 import CreateBillPage from './pages/CreateBillPage';
 import BillDetailPage from './pages/BillDetailPage'
 import ProfilePage from './pages/ProfilePage';
-
+import WebSockClient from'./api/WebSockClient'
 
 
 
@@ -44,11 +44,12 @@ const App: React.FC = () => (
           
         </Route>
         <Route path='/login' exact component={LoginPage}>
-          {/* <LoginPage /> */}
         </Route>
-        <Route path='/home' exact component={HomePage}>
-          
+
+        <Route path='/home'>
+          <HomePage /*stompClient = {WebSockClient.stompClient}*//>
         </Route>
+
         <Route path='/signup'>
           <SignUpPage />
         </Route>

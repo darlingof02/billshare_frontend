@@ -17,7 +17,6 @@ class WebSockClient {
         return this.instance;
     }
     
-
     connect = (token) => {
         var socket = new SockJS(`${API_URL}/gs-guide-websocket`,
         null,

@@ -24,14 +24,9 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-
-
-
 import CreateBillPage from './pages/CreateBillPage';
 import BillDetailPage from './pages/BillDetailPage'
 import ProfilePage from './pages/ProfilePage';
-import WebSockClient from'./api/WebSockClient'
-
 
 
 setupIonicReact();

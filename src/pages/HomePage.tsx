@@ -89,22 +89,6 @@ const HomePage: React.FC = (props:any) => {
         }, 2000)
     }
 
-    // const handleDebtUpdate = (e:any) => {
-    //     e.preventDefault()
-    //     e.stopPropagation()
-
-    //     const bid = e.target.getAttribute("debtor-id")
-    //     const status = e.target.getAttribute("debtor-status")
-
-    //     console.log(bid)
-    //     console.log(debtList)
-    //     axios({
-    //         url: API_URL + `/debts/${bid}`,
-    //         method: "PUT",
-    //         data: {status:Number(status)}
-    //     }).then(showDebt).catch(showDebt)
-    // }
-
 
 
     useEffect(() => {
@@ -114,8 +98,8 @@ const HomePage: React.FC = (props:any) => {
         // restartInterval(fetchBills)
         console.log("页面挂载",interval)
         PubSub.subscribe("news",(message, data)=>{
-            fetchBills();
             fetchDebts();
+            fetchBills();
             console.log("news:"+data)
         })
 

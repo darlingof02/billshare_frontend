@@ -31,12 +31,7 @@ const CreateBillPage: React.FC = (props:any) => {
     const [present] = useIonAlert();
 
     const simulateMap: Map<string,Payer> = new Map()
-    const simulate: Payer[] = [
-        // {debtorEmail: 'yuninx1@uci.edu', amount: 0, autoCalc: true},
-        // {debtorEmail: '1052073632@qq.com', amount: 0, autoCalc: true},
-        {debtorEmail: 'xieyn12345@gmail.com', amount: 0, autoCalc: true},
-        // {debtorEmail: 'yizhuanp1@uci.edu', amount: 0, autoCalc: true}
-    ]
+    const simulate: Payer[] = []
 
     simulate.forEach((payer:Payer,index,simulate) => simulateMap.set(payer.debtorEmail,payer))
     const [payerMap, setPayerMap] = useState<Map<string,Payer>>(simulateMap)

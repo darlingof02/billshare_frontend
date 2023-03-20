@@ -5,6 +5,8 @@ This app allows you to easily manage your shared bills and debts owed to others.
 
 See BillShare back-end [here](https://github.com/darlingof02/BillShare)
 
+See the demo [here](https://www.youtube.com/watch?v=D1gZhuITnMw)
+
 ## Features:
 *	Sign up
 *	Login/logout
